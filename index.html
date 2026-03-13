@@ -5,19 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MATOTA - Profesyonel Sınav & Değerlendirme</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         .waiting-rotate { animation: spin-slow 15s linear infinite; }
         .hidden { display: none !important; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
         .view-section { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .progress-bar-fill { transition: width 0.3s ease-in-out; }
         
-        /* Whiteboard */
+        /* Whiteboard Settings */
         #whiteboard-canvas {
             touch-action: none;
             cursor: crosshair;
@@ -35,7 +35,7 @@
             pointer-events: auto;
         }
 
-        /* Merkezi Yükleme */
+        /* Central Loader Animation */
         .loader-ring {
             display: inline-block;
             width: 80px;
@@ -64,7 +64,7 @@
 
     <!-- Merkezi Yükleme Overlay -->
     <div id="central-loader" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[250] hidden flex flex-col items-center justify-center text-white">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl flex flex-col items-center gap-6">
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl flex flex-col items-center gap-6 animate-in zoom-in duration-300">
             <div class="loader-ring"></div>
             <div class="text-center">
                 <h3 class="text-slate-800 font-black text-xl uppercase tracking-tighter">Sistem İşleniyor</h3>
@@ -75,7 +75,7 @@
 
     <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl hidden z-[400] font-bold text-sm"></div>
 
-    <!-- Navigasyon -->
+    <!-- Üst Navigasyon -->
     <nav class="bg-indigo-700 text-white p-4 shadow-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('portal')">
@@ -85,14 +85,14 @@
             <div class="flex items-center gap-4">
                 <button onclick="navigate('portal')" class="text-sm font-bold opacity-80 hover:opacity-100 transition px-2 font-black uppercase">Ana Sayfa</button>
                 <button id="teacher-nav-btn" onclick="navigate('teacher-login')" class="bg-white/20 hover:bg-white/30 px-5 py-2 rounded-xl text-sm font-black transition flex items-center gap-2 uppercase tracking-tighter shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     Panel
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- 1. PORTAL -->
+    <!-- 1. PORTAL EKRANI -->
     <section id="portal-section" class="view-section max-w-4xl mx-auto mt-20 px-4 text-center">
         <div class="bg-white p-16 rounded-[50px] shadow-2xl border border-slate-100">
             <h2 class="text-7xl font-black text-slate-900 mb-6 tracking-tighter uppercase">MATOTA</h2>
@@ -101,19 +101,19 @@
         </div>
     </section>
 
-    <!-- 2. ÖĞRETMEN GİRİŞİ -->
+    <!-- 2. ÖĞRETMEN GİRİŞ EKRANI -->
     <section id="teacher-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100">
-            <h2 class="text-3xl font-black mb-8 text-center text-slate-800 tracking-tight">Öğretmen Girişi</h2>
-            <div class="space-y-5">
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100 text-center">
+            <h2 class="text-3xl font-black mb-8 text-slate-800 tracking-tight">Yönetici Girişi</h2>
+            <div class="space-y-5 text-left">
                 <input type="email" id="t-email" placeholder="E-Posta" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-indigo-500 font-bold transition text-sm">
                 <input type="password" id="t-pass" placeholder="Şifre" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-indigo-500 font-bold transition text-sm">
-                <button onclick="handleTeacherAuth()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black hover:bg-black transition shadow-lg uppercase tracking-widest">Panel'e Gir</button>
+                <button onclick="handleTeacherAuth()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black hover:bg-black transition shadow-lg uppercase tracking-widest">GİRİŞ YAP</button>
             </div>
         </div>
     </section>
 
-    <!-- DASHBOARD -->
+    <!-- 3. ÖĞRETMEN PANELİ -->
     <section id="teacher-dashboard-section" class="view-section hidden max-w-6xl mx-auto mt-12 px-4 pb-20">
         <div class="flex justify-between items-end mb-10">
             <h2 class="text-5xl font-black text-slate-900 tracking-tighter uppercase">Sınavlarım</h2>
@@ -131,7 +131,7 @@
                         <input type="text" id="new-exam-name" placeholder="Sınav Adı" class="w-full p-4 border rounded-2xl outline-none font-bold text-sm bg-slate-50 focus:bg-white transition">
                         <input type="text" id="new-exam-code" placeholder="Sınav Kodu (Örn: MAT01)" class="w-full p-4 border rounded-2xl outline-none font-bold uppercase text-sm bg-slate-50 focus:bg-white transition">
                         <input type="number" id="new-exam-time" placeholder="Süre (Dakika)" class="w-full p-4 border rounded-2xl outline-none font-bold text-sm bg-slate-50 focus:bg-white transition">
-                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg transition uppercase">Oluştur</button>
+                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg transition uppercase">OLUŞTUR</button>
                     </div>
                 </div>
             </div>
@@ -139,7 +139,7 @@
         </div>
     </section>
 
-    <!-- SINAV DÜZENLEME -->
+    <!-- 4. SINAV DÜZENLEME PANELİ -->
     <section id="manage-exam-section" class="view-section hidden max-w-7xl mx-auto mt-12 px-4 pb-32">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
             <div class="flex items-center gap-6">
@@ -158,14 +158,14 @@
         </div>
 
         <div class="grid lg:grid-cols-12 gap-10">
-            <!-- Soru Paneli -->
+            <!-- Sol: Soru Bankası -->
             <div class="lg:col-span-7 space-y-8">
                 <div class="bg-white p-8 rounded-[40px] shadow-xl border border-slate-50 h-fit">
                     <h3 id="q-editor-title" class="text-xl font-black mb-6 text-indigo-600 flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         Soru Ekle
                     </h3>
-                    <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 space-y-4 mb-8">
+                    <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 space-y-4">
                         <textarea id="q-input" oninput="updateLivePreview()" placeholder="Soru metni..." class="w-full p-5 border rounded-2xl h-32 outline-none font-medium focus:bg-white transition text-sm"></textarea>
                         <div class="grid grid-cols-2 gap-4">
                             <select id="q-ans" class="p-4 border rounded-2xl font-black text-sm bg-white outline-none">
@@ -189,15 +189,15 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 KAYDET
                             </button>
-                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-200 text-slate-600 rounded-2xl font-bold hidden uppercase tracking-tighter">İptal</button>
+                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-200 text-slate-600 rounded-2xl font-bold hidden uppercase tracking-tighter text-sm">İptal</button>
                         </div>
                     </div>
                     <div id="q-list" class="mt-8 space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar"></div>
                 </div>
             </div>
 
-            <div class="lg:col-span-5 space-y-8">
-                <!-- Öğrenciler -->
+            <!-- Sağ: Öğrenci ve Yanıt Listesi -->
+            <div class="lg:col-span-5 space-y-8 text-left">
                 <div class="bg-white p-8 rounded-[35px] shadow-xl border border-green-50">
                     <h3 class="text-xl font-black mb-6 text-green-600 flex items-center gap-2 uppercase tracking-tighter">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M18 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -212,7 +212,6 @@
                     <div id="s-list" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar"></div>
                 </div>
 
-                <!-- Yanıtlar -->
                 <div class="bg-slate-900 p-8 rounded-[40px] shadow-2xl text-white">
                     <h3 class="text-xl font-black mb-6 flex items-center gap-2 text-indigo-400 uppercase tracking-tighter">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -228,7 +227,7 @@
     <div id="details-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
         <div class="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl max-h-[85vh] flex flex-col">
             <div class="p-8 border-b flex justify-between items-center bg-slate-50/50 rounded-t-[40px]">
-                <div>
+                <div class="text-left">
                     <h3 id="modal-student-name" class="text-2xl font-black text-slate-800">Analiz Raporu</h3>
                     <p id="modal-exam-info" class="text-xs font-bold text-slate-400 uppercase tracking-tighter mt-1"></p>
                 </div>
@@ -241,7 +240,7 @@
     </div>
 
     <!-- ÖĞRENCİ GİRİŞİ -->
-    <section id="student-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4">
+    <section id="student-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4 text-center">
         <div class="bg-white p-12 rounded-[50px] shadow-2xl border text-center">
             <h2 class="text-3xl font-black mb-10 tracking-tighter uppercase">Sınava Katıl</h2>
             <div class="space-y-6 text-left">
@@ -258,7 +257,7 @@
         </div>
     </section>
 
-    <!-- SINAV EKRANI -->
+    <!-- SINAV / ÇÖZÜM EKRANI -->
     <section id="exam-section" class="view-section hidden min-h-screen bg-white">
         <header class="bg-indigo-600 text-white p-5 flex justify-between items-center sticky top-0 z-[60] shadow-lg">
             <div class="flex items-center gap-4">
@@ -282,29 +281,29 @@
                     </div>
                 </div>
 
-                <!-- Tahta Araçları -->
+                <!-- Tahta Kontrol Paneli -->
                 <div class="bg-white p-4 rounded-3xl shadow-lg border border-indigo-50 flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <button onclick="setTool('pen')" id="tool-pen" class="bg-indigo-600 text-white p-3 rounded-2xl shadow-md tool-btn flex items-center justify-center">
+                        <button onclick="setTool('pen')" id="tool-pen" class="bg-indigo-600 text-white p-3 rounded-2xl shadow-md tool-btn flex items-center justify-center transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <button onclick="setTool('eraser')" id="tool-eraser" class="bg-slate-100 text-slate-500 p-3 rounded-2xl tool-btn hover:bg-slate-200 flex items-center justify-center">
+                        <button onclick="setTool('eraser')" id="tool-eraser" class="bg-slate-100 text-slate-500 p-3 rounded-2xl tool-btn hover:bg-slate-200 flex items-center justify-center transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <button onclick="clearCanvas()" class="bg-red-50 text-red-500 p-3 rounded-2xl hover:bg-red-100 flex items-center justify-center">
+                        <button onclick="clearCanvas(true)" class="bg-red-50 text-red-500 p-3 rounded-2xl hover:bg-red-100 flex items-center justify-center transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                         <div class="h-8 w-px bg-slate-200 mx-2"></div>
                         <button onclick="toggleWhiteboard()" id="btn-toggle-wb" class="text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-slate-900 text-white rounded-xl transition">Kalemi Aç</button>
                     </div>
                     <div class="flex gap-2">
-                        <button id="q-btn-prev" onclick="navQ(-1)" class="bg-slate-100 text-slate-400 px-10 py-4 rounded-3xl font-black transition hover:bg-slate-200">GERİ</button>
-                        <button id="q-btn-next" onclick="navQ(1)" class="bg-indigo-600 text-white px-12 py-5 rounded-3xl font-black shadow-lg transition hover:bg-indigo-700 uppercase">İleri</button>
+                        <button id="q-btn-prev" onclick="navQ(-1)" class="bg-slate-100 text-slate-400 px-8 py-3 rounded-2xl font-black uppercase tracking-tighter transition hover:bg-slate-200">Geri</button>
+                        <button id="q-btn-next" onclick="navQ(1)" class="bg-indigo-600 text-white px-10 py-3 rounded-2xl font-black shadow-lg transition hover:bg-indigo-700 uppercase tracking-tighter">İleri</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Optik -->
+            <!-- Optik Panel -->
             <div class="lg:col-span-4">
                 <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-indigo-50 sticky top-32 h-fit max-h-[75vh] flex flex-col">
                     <h3 class="font-black mb-6 pb-4 border-b text-indigo-600 uppercase tracking-tighter">Optik Form</h3>
@@ -315,7 +314,7 @@
         </div>
     </section>
 
-    <!-- BEKLEME EKRANI -->
+    <!-- BEKLEME PANELİ -->
     <section id="wait-section" class="view-section hidden max-w-xl mx-auto mt-32 px-4 text-center">
         <div class="bg-white p-16 rounded-[60px] shadow-2xl relative overflow-hidden border border-indigo-50">
             <div class="absolute inset-0 bg-indigo-600/5 waiting-rotate rounded-full -m-20"></div>
@@ -327,7 +326,7 @@
         </div>
     </section>
 
-    <!-- SONUÇ EKRANI -->
+    <!-- SONUÇ PANELİ (KARNE) -->
     <section id="result-section" class="view-section hidden max-w-2xl mx-auto mt-16 px-4 pb-20 text-center">
         <div class="bg-white p-12 rounded-[50px] shadow-2xl border relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-indigo-500 to-green-500"></div>
@@ -344,15 +343,10 @@
 
         let exams = [], curExam = null, curStudentSession = null, stdAnswers = {}, curQIdx = 0, timerInt = null, tempImg = null;
         let isEditMode = false, editingQIdx = -1, isTeacherMode = false;
+        let questionDrawings = {}; // Çizimleri tutacak hafıza objesi
 
         // --- TAHTA (WHITEBOARD) ---
         let canvas, ctx, drawing = false, tool = 'pen', wbActive = false;
-
-        function refreshIcons() {
-            if (window.lucide) {
-                setTimeout(() => window.lucide.createIcons(), 50);
-            }
-        }
 
         function setupWhiteboard() {
             canvas = document.getElementById('whiteboard-canvas');
@@ -427,7 +421,11 @@
             active.classList.replace('text-slate-500', 'text-white');
         };
 
-        window.clearCanvas = () => ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
+        window.clearCanvas = (permanent = false) => {
+            if(!ctx) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(permanent) delete questionDrawings[curQIdx];
+        };
 
         // --- UI ---
         function setProgress(percent) {
@@ -477,18 +475,17 @@
                 setTimeout(setupWhiteboard, 300);
                 renderOpticalForm();
             }
-            refreshIcons();
             window.scrollTo(0,0);
         };
 
-        // --- TEACHER ---
+        // --- TEACHER ACTIONS ---
         window.handleTeacherAuth = function() {
             const e = document.getElementById('t-email').value;
             const p = document.getElementById('t-pass').value;
             if (e === 'alisengulidu@gmail.com' && p === '352477Ali') {
                 localStorage.setItem('matota_auth', JSON.stringify({ isTeacher: true }));
                 navigate('teacher-dashboard');
-                document.getElementById('teacher-nav-btn').innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Panelim`;
+                document.getElementById('teacher-nav-btn').innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Panelim`;
             } else showToast("Hatalı Giriş Bilgileri!");
         };
 
@@ -506,10 +503,10 @@
         function renderExamsList() {
             document.getElementById('exams-container').innerHTML = exams.map(ex => `
                 <div class="bg-white p-7 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center hover:shadow-xl transition-all group">
-                    <div>
+                    <div class="text-left">
                         <h4 class="font-black text-xl text-slate-800 tracking-tight group-hover:text-indigo-600 transition-colors uppercase">${ex.title}</h4>
                         <p class="text-[10px] text-slate-400 font-black uppercase mt-1 tracking-widest font-mono">
-                            KOD: <span class="text-indigo-600">${ex.code || ex.id.substring(0,8)}</span> | ${ex.duration} DK | ${ex.questions?.length || 0} SORU
+                            KOD: <span class="text-indigo-600">${ex.code || ex.id.substring(0,8)}</span> | ${ex.questions?.length || 0} SORU
                         </p>
                     </div>
                     <div class="flex gap-2">
@@ -567,7 +564,7 @@
             if (text || tempImg) {
                 prev.classList.remove('hidden');
                 document.getElementById('preview-text').innerText = text;
-                document.getElementById('preview-img-container').innerHTML = tempImg ? `<img src="${tempImg}" class="max-h-40 rounded-xl mx-auto border">` : '';
+                document.getElementById('preview-img-container').innerHTML = tempImg ? `<img src="${tempImg}" class="max-h-40 rounded-xl mx-auto border shadow-sm">` : '';
             } else prev.classList.add('hidden');
         };
 
@@ -637,8 +634,8 @@
             document.getElementById('s-list').innerHTML = (stds || []).map(s => `
                 <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
                     <div class="flex flex-col text-left">
-                        <span class="font-bold text-sm text-slate-700 uppercase">${s.name}</span>
-                        <span class="font-mono text-[9px] bg-yellow-100 px-2 rounded-lg font-black text-yellow-800 uppercase w-fit mt-1">${s.password}</span>
+                        <span class="font-bold text-sm text-slate-700 uppercase tracking-tighter">${s.name}</span>
+                        <span class="font-mono text-[9px] bg-yellow-100 px-2 rounded-lg font-black text-yellow-800 uppercase mt-1 w-fit">${s.password}</span>
                     </div>
                     <button onclick="deleteStudent('${s.id}')" class="text-red-400 p-2 hover:bg-red-50 rounded-xl transition">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -684,7 +681,7 @@
             document.getElementById('modal-answers-content').innerHTML = curExam.questions.map((q, i) => {
                 const stdAns = sub.answers[i] || '-', isCorrect = stdAns === q.correct;
                 return `<div class="p-5 rounded-3xl border-2 ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
-                    <p class="text-sm font-bold text-slate-700 mb-3">${q.text || "(Görsel)"}</p>
+                    <p class="text-sm font-bold text-slate-700 mb-3">${q.text || "(Görsel Soru)"}</p>
                     <div class="flex gap-4 font-black text-xs uppercase">
                         <span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">Giriş: ${stdAns}</span>
                         <span class="text-indigo-600">Doğru: ${q.correct}</span>
@@ -709,7 +706,7 @@
             fetchStudentsAndSubs();
         };
 
-        // --- EXAM FLOW ---
+        // --- SINAV AKIŞI ---
         window.solveAsTeacher = (id) => {
             curExam = exams.find(e => e.id === id);
             curStudentSession = null;
@@ -717,6 +714,7 @@
             document.getElementById('active-title').innerText = "ÖĞRETMEN ÇÖZÜM MODU";
             document.getElementById('exam-timer-box').classList.add('hidden');
             document.getElementById('finish-btn').classList.add('hidden');
+            questionDrawings = {}; // Temizle
             navigate('exam');
         };
 
@@ -741,6 +739,7 @@
             document.getElementById('active-title').innerText = ex.title;
             document.getElementById('exam-timer-box').classList.remove('hidden');
             document.getElementById('finish-btn').classList.remove('hidden');
+            questionDrawings = {}; // Temizle
             
             setTimeout(() => { setCentralLoader(false); navigate('exam'); startTimer(curExam.duration); }, 600);
         };
@@ -756,16 +755,24 @@
         }
 
         function renderExamQuestion() {
-            clearCanvas();
+            clearCanvas(); // Önce temizle
             const q = curExam.questions[curQIdx];
             const c = document.getElementById('q-container');
             if (!q) return;
             c.innerHTML = `
-                <div class="space-y-8 animate-in fadeIn duration-500">
+                <div class="space-y-8 animate-in fadeIn duration-500 text-left">
                     <h3 class="text-4xl font-black text-indigo-700 font-mono uppercase tracking-tighter">Soru ${curQIdx + 1}</h3>
                     ${q.image ? `<div class="bg-white p-2 rounded-3xl border shadow-sm"><img src="${q.image}" class="max-h-[400px] w-full object-contain mx-auto"></div>` : ''}
                     <div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap">${q.text || ""}</div>
                 </div>`;
+            
+            // Eğer bu soru için çizim varsa geri yükle
+            if (questionDrawings[curQIdx]) {
+                const img = new Image();
+                img.onload = () => ctx.drawImage(img, 0, 0);
+                img.src = questionDrawings[curQIdx];
+            }
+
             document.getElementById('q-btn-prev').disabled = curQIdx === 0;
             document.getElementById('q-btn-next').innerText = curQIdx === curExam.questions.length - 1 ? (isTeacherMode ? "BİTİR" : "SINAVI BİTİR") : "İLERİ";
         }
@@ -783,9 +790,22 @@
         }
 
         window.setAns = (i, o) => { if(!isTeacherMode) { stdAnswers[i] = o; renderOpticalForm(); } };
-        window.navQ = (d) => { if (d === 1 && curQIdx === curExam.questions.length - 1) { if(isTeacherMode) location.reload(); else finishExamPrompt(); } else { curQIdx += d; renderExamQuestion(); } };
+
+        window.navQ = (d) => { 
+            // Mevcut çizimi kaydet
+            if (canvas) questionDrawings[curQIdx] = canvas.toDataURL();
+
+            if (d === 1 && curQIdx === curExam.questions.length - 1) { 
+                if(isTeacherMode) location.reload(); 
+                else finishExamPrompt(); 
+            } else { 
+                curQIdx += d; 
+                renderExamQuestion(); 
+            } 
+        };
+
         window.finishExamPrompt = () => { if (confirm("Sınavı bitirmek istiyor musunuz?")) finishExam(); };
-        window.exitExam = () => location.reload();
+        window.exitExam = () => { if(confirm("Çıkmak istiyor musunuz?")) location.reload(); };
 
         async function finishExam() {
             clearInterval(timerInt);
@@ -800,7 +820,7 @@
                         _sb.removeChannel(chan);
                         const end = new Date(payload.new.extra_time_until), now = new Date();
                         navigate('exam'); startTimer(Math.floor((end - now) / 60000));
-                        showToast("Ek süre tanımlandı!");
+                        showToast("Süre eklendi!");
                     }
                     if (payload.new.status === 'published') { showFinalResults(payload.new); _sb.removeChannel(chan); }
                 }).subscribe();
@@ -814,9 +834,9 @@
                 <div class="text-center mb-10"><div class="inline-block p-10 bg-indigo-50 rounded-full border-4 border-indigo-600 shadow-xl mb-4 font-black text-7xl text-indigo-700">%${s}</div></div>
                 <div class="space-y-3">
                     ${curExam.questions.map((q, i) => `
-                        <div class="flex justify-between p-5 rounded-3xl border-2 ${sub.answers[i] === q.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
+                        <div class="flex justify-between p-5 rounded-3xl border-2 ${sub.answers[i] === q.correct ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}">
                             <span class="font-bold">Soru ${i+1}</span>
-                            <span class="font-black text-xs uppercase">Sen: ${sub.answers[i] || '-'} | Doğru: ${q.correct}</span>
+                            <span class="font-black text-xs uppercase text-right">Sen: ${sub.answers[i] || '-'} | Doğru: ${q.correct}</span>
                         </div>`).join('')}
                 </div>`;
         }
