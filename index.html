@@ -8,90 +8,89 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .waiting-rotate { animation: spin-slow 12s linear infinite; }
+        /* Bekleme ekranındaki fırlanma animasyonu */
+        @keyframes rotate-wait { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .waiting-rotate { animation: rotate-wait 15s linear infinite; }
+        .spinner { animation: rotate-wait 1.5s linear infinite; }
         .hidden { display: none; }
+        .view-section { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
-        .view-section { animation: fadeIn 0.3s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        .preview-box img { max-height: 200px; width: 100%; object-fit: contain; border-radius: 1rem; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen font-sans text-slate-900 overflow-x-hidden">
 
+    <!-- Bildirim Mesajı -->
     <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl hidden z-[100] font-bold text-sm"></div>
 
+    <!-- Navigasyon Menüsü -->
     <nav class="bg-indigo-700 text-white p-4 shadow-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
-                <div class="bg-white text-indigo-700 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl">M</div>
+                <div class="bg-white text-indigo-700 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl shadow-inner">M</div>
                 <h1 class="text-2xl font-black tracking-tighter uppercase">MATOTA</h1>
             </div>
             <div class="flex items-center gap-4">
                 <button onclick="switchView('portal')" class="text-sm font-bold opacity-80 hover:opacity-100 transition">Ana Sayfa</button>
-                <button id="teacher-nav-btn" onclick="switchView('teacher-login')" class="bg-white/20 hover:bg-white/30 px-6 py-2 rounded-xl text-sm font-black transition">Öğretmen Paneli</button>
+                <button id="teacher-nav-btn" onclick="switchView('teacher-login')" class="bg-white/20 hover:bg-white/30 px-6 py-2 rounded-xl text-sm font-black transition">Öğretmen Girişi</button>
             </div>
         </div>
     </nav>
 
-    <!-- PORTAL -->
+    <!-- 1. PORTAL (GİRİŞ SEÇİMİ) -->
     <section id="portal-section" class="view-section max-w-4xl mx-auto mt-20 px-4 text-center">
         <div class="bg-white p-16 rounded-[50px] shadow-2xl border border-slate-100">
             <h2 class="text-7xl font-black text-slate-900 mb-6 tracking-tighter uppercase">MATOTA</h2>
-            <p class="text-slate-400 mb-12 text-xl font-medium">Test ve Deneme Sınavlarının Dijital Merkezi</p>
+            <p class="text-slate-400 mb-12 text-xl font-medium">Dijital Sınav ve Değerlendirme Merkezi.</p>
             <button onclick="switchView('student-login')" class="bg-indigo-600 text-white px-12 py-5 rounded-3xl font-black text-xl hover:bg-indigo-700 shadow-2xl shadow-indigo-200 transition-all hover:-translate-y-1">Sınava Giriş Yap</button>
         </div>
     </section>
 
-    <!-- ÖĞRETMEN GİRİŞİ -->
+    <!-- 2. ÖĞRETMEN GİRİŞİ -->
     <section id="teacher-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4">
         <div class="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100">
             <h2 class="text-3xl font-black mb-8 text-center text-slate-800">Yönetici Girişi</h2>
             <div class="space-y-5">
                 <input type="email" id="t-email" placeholder="E-Posta" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-indigo-500 font-bold transition">
                 <input type="password" id="t-pass" placeholder="Şifre" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-indigo-500 font-bold transition">
-                <button onclick="handleTeacherAuth()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black hover:bg-black shadow-xl transition">PANELİ AÇ</button>
+                <button onclick="handleTeacherAuth()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black hover:bg-black shadow-xl transition">GİRİŞ YAP</button>
             </div>
         </div>
     </section>
 
-    <!-- ÖĞRETMEN DASHBOARD -->
+    <!-- 3. ÖĞRETMEN DASHBOARD -->
     <section id="teacher-dashboard-section" class="view-section hidden max-w-6xl mx-auto mt-12 px-4 pb-20">
         <div class="flex justify-between items-end mb-10">
-            <h2 class="text-5xl font-black text-slate-900 tracking-tighter">Sınav Yönetimi</h2>
-            <button onclick="logout()" class="text-red-500 font-black text-sm hover:underline">Çıkış</button>
+            <h2 class="text-5xl font-black text-slate-900 tracking-tighter">Sınav Paneli</h2>
+            <button onclick="logout()" class="text-red-500 font-black text-sm">Çıkış</button>
         </div>
         
         <div class="grid lg:grid-cols-3 gap-10">
+            <!-- Yeni Sınav Kartı -->
             <div class="lg:col-span-1">
                 <div class="bg-white p-8 rounded-[35px] shadow-xl border border-slate-100 sticky top-28">
-                    <h3 class="font-black text-indigo-600 text-xs uppercase mb-6 tracking-widest">Yeni Sınav Oluştur</h3>
+                    <h3 class="font-black text-indigo-600 text-xs uppercase mb-6 tracking-widest">Yeni Sınav</h3>
                     <div class="space-y-4">
-                        <input type="text" id="new-exam-name" placeholder="Sınav Adı" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-bold">
-                        <input type="number" id="new-exam-time" placeholder="Süre (DK)" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none font-bold">
-                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg transition">SINAVI OLUŞTUR</button>
+                        <input type="text" id="new-exam-name" placeholder="Sınav Adı" class="w-full p-4 border rounded-2xl outline-none font-bold">
+                        <input type="number" id="new-exam-time" placeholder="Süre (DK)" class="w-full p-4 border rounded-2xl outline-none font-bold">
+                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg">OLUŞTUR</button>
                     </div>
                 </div>
             </div>
+            <!-- Sınav Listesi -->
             <div class="lg:col-span-2 space-y-4" id="exams-container">
-                <div class="flex flex-col items-center justify-center py-20 text-slate-300">
-                    <i data-lucide="loader-2" class="w-8 h-8 animate-spin mb-4"></i>
-                    <p class="italic">Sınavlar yükleniyor...</p>
-                </div>
+                <div class="p-10 text-center text-slate-300 italic">Yükleniyor...</div>
             </div>
         </div>
     </section>
 
-    <!-- SINAV YÖNETİM DETAY -->
+    <!-- 4. SINAV DETAYLARI VE SORU BANKASI -->
     <section id="manage-exam-section" class="view-section hidden max-w-7xl mx-auto mt-12 px-4 pb-32">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
             <div class="flex items-center gap-6">
                 <button onclick="switchView('teacher-dashboard')" class="bg-white p-4 rounded-2xl shadow-md text-slate-400 hover:text-indigo-600 transition"><i data-lucide="arrow-left"></i></button>
-                <div>
-                    <h2 id="m-exam-title" class="text-4xl font-black text-slate-900 tracking-tighter">Sınav Düzenle</h2>
-                    <p id="m-exam-code" class="text-xs font-bold text-slate-400 mt-1 uppercase tracking-widest">KOD: ---</p>
-                </div>
+                <h2 id="m-exam-title" class="text-4xl font-black text-slate-900">Sınav Düzenle</h2>
             </div>
             <button onclick="copyShareLink()" class="bg-indigo-50 text-indigo-600 px-8 py-3 rounded-2xl font-black text-sm flex items-center gap-2 hover:bg-indigo-100 transition shadow-sm">
                 <i data-lucide="link" class="w-4 h-4"></i> Linki Kopyala
@@ -99,36 +98,34 @@
         </div>
 
         <div class="grid lg:grid-cols-12 gap-10">
-            <div class="lg:col-span-7 space-y-8">
-                <div class="bg-white p-8 rounded-[40px] shadow-xl">
-                    <h3 class="text-xl font-black mb-6 flex items-center gap-2 text-indigo-600"><i data-lucide="plus-circle"></i> Soru Bankası</h3>
-                    <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 space-y-4">
-                        <textarea id="q-input" oninput="updateLivePreview()" placeholder="Soru metnini buraya yazın..." class="w-full p-5 border rounded-2xl h-32 outline-none focus:bg-white font-medium text-sm transition"></textarea>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <select id="q-ans" class="p-4 border rounded-2xl font-black text-sm bg-white">
-                                <option value="A">Doğru: A</option><option value="B">Doğru: B</option>
-                                <option value="C">Doğru: C</option><option value="D">Doğru: D</option>
-                                <option value="E">Doğru: E</option>
-                            </select>
-                            <label class="p-4 border rounded-2xl bg-white cursor-pointer flex items-center justify-center gap-2 font-bold text-xs text-slate-500 hover:bg-slate-50 transition shadow-sm">
-                                <i data-lucide="image"></i> Görsel Ekle
-                                <input type="file" id="q-img-file" onchange="handleImagePreview(event)" accept="image/*" class="hidden">
-                            </label>
-                        </div>
-
-                        <div id="live-preview" class="p-5 bg-white rounded-2xl border hidden shadow-inner">
-                            <p class="text-[10px] font-black text-indigo-400 uppercase mb-3 tracking-widest">Canlı Önizleme</p>
-                            <div id="preview-img-container" class="preview-box mb-4"></div>
-                            <p id="preview-text" class="text-sm font-medium whitespace-pre-wrap"></p>
-                        </div>
-
-                        <button onclick="saveQuestion()" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-indigo-700 transition">SORUYU BANKAYA EKLE</button>
+            <!-- Soru Ekleme Paneli -->
+            <div class="lg:col-span-7 space-y-8 bg-white p-8 rounded-[40px] shadow-xl">
+                <h3 class="text-xl font-black mb-6 text-indigo-600">Soru Ekle</h3>
+                <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 space-y-4">
+                    <textarea id="q-input" oninput="updateLivePreview()" placeholder="Soru metni..." class="w-full p-5 border rounded-2xl h-32 outline-none font-medium"></textarea>
+                    <div class="grid grid-cols-2 gap-4">
+                        <select id="q-ans" class="p-4 border rounded-2xl font-black text-sm bg-white">
+                            <option value="A">Doğru: A</option><option value="B">Doğru: B</option>
+                            <option value="C">Doğru: C</option><option value="D">Doğru: D</option>
+                            <option value="E">Doğru: E</option>
+                        </select>
+                        <label class="p-4 border rounded-2xl bg-white cursor-pointer flex items-center justify-center gap-2 font-bold text-xs text-slate-500 hover:bg-slate-50 transition shadow-sm">
+                            <i data-lucide="image"></i> Görsel Ekle
+                            <input type="file" id="q-img-file" onchange="handleImagePreview(event)" accept="image/*" class="hidden">
+                        </label>
                     </div>
-                    <div id="q-list" class="mt-8 space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    <!-- Canlı Önizleme -->
+                    <div id="live-preview" class="p-5 bg-white rounded-2xl border hidden shadow-inner">
+                        <p class="text-[10px] font-black text-indigo-400 uppercase mb-3 tracking-widest">Önizleme</p>
+                        <div id="preview-img-container" class="mb-4"></div>
+                        <p id="preview-text" class="text-sm font-medium whitespace-pre-wrap"></p>
+                    </div>
+                    <button onclick="saveQuestion()" class="w-full bg-indigo-600 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-indigo-700 transition">SORUYU KAYDET</button>
                 </div>
+                <div id="q-list" class="mt-8 space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div>
             </div>
 
+            <!-- Öğrenci Kaydı ve Canlı Yanıtlar -->
             <div class="lg:col-span-5 space-y-8">
                 <div class="bg-white p-8 rounded-[35px] shadow-xl border border-green-50">
                     <h3 class="text-xl font-black mb-6 flex items-center gap-2 text-green-600"><i data-lucide="users"></i> Öğrenci Kaydı</h3>
@@ -140,18 +137,18 @@
                 </div>
 
                 <div class="bg-slate-900 p-8 rounded-[40px] shadow-2xl text-white">
-                    <h3 class="text-xl font-black mb-6 flex items-center gap-2 text-indigo-400"><i data-lucide="send"></i> Bekleyen Yanıtlar</h3>
+                    <h3 class="text-xl font-black mb-6 flex items-center gap-2 text-indigo-400"><i data-lucide="activity"></i> Canlı Yanıtlar</h3>
                     <div id="sub-list" class="space-y-3"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ÖĞRENCİ GİRİŞİ -->
+    <!-- 5. ÖĞRENCİ GİRİŞİ -->
     <section id="student-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4">
-        <div class="bg-white p-12 rounded-[50px] shadow-2xl border border-slate-100">
-            <h2 class="text-3xl font-black mb-10 text-center tracking-tighter uppercase">Sınava Katıl</h2>
-            <div class="space-y-6">
+        <div class="bg-white p-12 rounded-[50px] shadow-2xl border text-center">
+            <h2 class="text-3xl font-black mb-10 tracking-tighter uppercase">Sınava Bağlan</h2>
+            <div class="space-y-6 text-left">
                 <input type="text" id="std-exam-id" placeholder="SINAV KODU" class="w-full p-5 bg-slate-50 border-2 rounded-3xl outline-none font-bold text-center uppercase tracking-widest focus:border-indigo-500">
                 <input type="password" id="std-pass" placeholder="ÖZEL ŞİFRE" class="w-full p-5 bg-slate-50 border-2 rounded-3xl outline-none font-bold text-center uppercase tracking-widest focus:border-indigo-500">
                 <button onclick="studentLogin()" class="w-full bg-indigo-600 text-white py-5 rounded-[24px] font-black text-lg shadow-2xl hover:bg-indigo-700 transition">BAŞLAT</button>
@@ -159,13 +156,14 @@
         </div>
     </section>
 
-    <!-- SINAV EKRANI -->
+    <!-- 6. SINAV EKRANI -->
     <section id="exam-section" class="view-section hidden min-h-screen bg-white">
         <header class="bg-indigo-600 text-white p-5 flex justify-between items-center sticky top-0 z-[60] shadow-lg">
             <span id="active-title" class="font-black text-sm uppercase tracking-widest">SINAV</span>
             <div id="exam-timer" class="bg-white text-indigo-700 px-6 py-2 rounded-2xl font-mono font-black text-xl shadow-inner">00:00</div>
         </header>
         <div class="max-w-7xl mx-auto px-4 py-12 grid lg:grid-cols-12 gap-12">
+            <!-- Soru Alanı -->
             <div class="lg:col-span-8">
                 <div id="q-container" class="bg-slate-50 p-12 rounded-[45px] shadow-inner border border-slate-100 min-h-[500px]"></div>
                 <div class="mt-10 flex justify-between">
@@ -173,9 +171,10 @@
                     <button id="q-btn-next" onclick="navQ(1)" class="bg-indigo-600 text-white px-12 py-5 rounded-3xl font-black shadow-lg">İLERİ</button>
                 </div>
             </div>
+            <!-- Optik Form -->
             <div class="lg:col-span-4">
                 <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-indigo-50 sticky top-32">
-                    <h3 class="font-black mb-6 pb-4 border-b">Optik Form</h3>
+                    <h3 class="font-black mb-6 border-b pb-4 text-indigo-600">Optik Form</h3>
                     <div id="opt-form" class="space-y-3 max-h-[60vh] overflow-y-auto custom-scrollbar"></div>
                     <button onclick="finishExamPrompt()" class="mt-8 w-full bg-slate-900 text-white py-4 rounded-2xl font-black hover:bg-black transition">SINAVI BİTİR</button>
                 </div>
@@ -183,51 +182,53 @@
         </div>
     </section>
 
-    <!-- BEKLEME EKRANI -->
+    <!-- 7. BEKLEME EKRANI -->
     <section id="wait-section" class="view-section hidden max-w-xl mx-auto mt-32 px-4 text-center">
         <div class="bg-white p-16 rounded-[60px] shadow-2xl relative overflow-hidden border border-indigo-50">
             <div class="absolute inset-0 bg-indigo-600/5 waiting-rotate rounded-full -m-20"></div>
             <div class="relative z-10">
-                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg"></div>
-                <h2 class="text-4xl font-black text-slate-800 mb-6 tracking-tighter">Cevaplar İletildi</h2>
+                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full spinner mx-auto mb-10 shadow-lg"></div>
+                <h2 class="text-4xl font-black text-slate-800 mb-6 tracking-tighter uppercase">Bekleniyor</h2>
                 <p class="text-xl text-indigo-500 font-bold italic mb-2">"Öğretmeninizin Sonucunuzu Yayınlaması Bekleniyor..."</p>
                 <p class="text-[10px] text-slate-300 font-black uppercase tracking-widest">Pencereyi kapatmayınız</p>
             </div>
         </div>
     </section>
 
-    <!-- SONUÇ EKRANI -->
-    <section id="result-section" class="view-section hidden max-w-2xl mx-auto mt-16 px-4">
+    <!-- 8. SONUÇ EKRANI (KARNE) -->
+    <section id="result-section" class="view-section hidden max-w-2xl mx-auto mt-16 px-4 pb-20">
         <div class="bg-white p-12 rounded-[50px] shadow-2xl border">
-            <h2 class="text-5xl font-black text-center mb-12 tracking-tighter uppercase">Sınav Karnesi</h2>
-            <div id="res-content" class="space-y-4"></div>
+            <h2 class="text-5xl font-black text-center mb-12 tracking-tighter uppercase">Karne</h2>
+            <div id="res-content" class="space-y-3"></div>
             <button onclick="location.reload()" class="w-full mt-12 bg-slate-900 text-white py-6 rounded-3xl font-black shadow-lg transition hover:scale-[1.02]">ANA SAYFAYA DÖN</button>
         </div>
     </section>
 
     <script>
+        // --- Supabase Bağlantısı ---
         const SB_URL = 'https://uuolgqipaltotaxutfgw.supabase.co';
-        // ÖNEMLİ: Eğer bu anahtar hata veriyorsa Supabase panelinden "anon public key" değerini alın.
         const SB_KEY = 'sb_publishable_WuSvqXpwM0z_u3Mek0zMLw_FT94Hh5G_'; 
         let _sb;
 
+        // --- Uygulama Durumu ---
         let exams = [], curExam = null, curStudentSession = null, stdAnswers = {}, curQIdx = 0, timerInt = null, tempImg = null;
 
         function init() {
             try {
                 if (window.supabase) {
                     _sb = window.supabase.createClient(SB_URL, SB_KEY);
-                    console.log("MATOTA Bağlantısı Hazır.");
+                    console.log("Supabase Bağlantısı Hazır.");
                     checkUrlForExam();
                 } else {
                     setTimeout(init, 100);
                 }
             } catch (e) {
-                console.error("Supabase Init Error:", e);
-                showToast("Bağlantı hatası: API Anahtarınızı kontrol edin.");
+                console.error("Başlatma Hatası:", e);
+                showToast("Bağlantı hatası: API Key'i kontrol edin.");
             }
         }
 
+        // --- Navigasyon Fonksiyonları ---
         function checkUrlForExam() {
             const eid = new URLSearchParams(window.location.search).get('exam');
             if (eid) {
@@ -246,11 +247,12 @@
             window.scrollTo(0,0);
         };
 
+        // --- Öğretmen Giriş ve Yönetim ---
         window.handleTeacherAuth = function() {
             const e = document.getElementById('t-email').value;
             const p = document.getElementById('t-pass').value;
             if (e === 'alisengulidu@gmail.com' && p === '352477Ali') {
-                showToast("Ali Bey, Hoş Geldiniz!");
+                showToast("Hoş Geldiniz, Ali Bey!");
                 switchView('teacher-dashboard');
                 document.getElementById('teacher-nav-btn').innerText = "Kontrol Paneli";
             } else {
@@ -261,32 +263,32 @@
         window.logout = () => location.reload();
 
         async function fetchAllExams() {
-            const container = document.getElementById('exams-container');
             try {
                 const { data, error } = await _sb.from('exams').select('*').order('created_at', { ascending: false });
                 if (error) throw error;
                 exams = data || [];
                 renderExams();
             } catch (err) {
-                console.error("Fetch Error:", err);
-                showToast("Yetki Hatası (401)! Lütfen SQL kodunu çalıştırın.");
-                container.innerHTML = `<div class='p-10 bg-red-50 text-red-500 rounded-3xl border border-red-100 text-center font-bold'>
-                    Hata: Supabase yetki sorunu. <br> SQL Editor'deki izinleri kontrol edin.
-                </div>`;
+                console.error("Yükleme Hatası:", err);
+                document.getElementById('exams-container').innerHTML = `
+                    <div class='p-10 bg-red-50 text-red-500 rounded-3xl border border-red-100 text-center font-bold'>
+                        Hata: Supabase yetki sorunu (401). <br> 
+                        <p class="text-xs font-normal mt-2">Lütfen SQL Editor'deki "fix_supabase.sql" kodunu çalıştırın.</p>
+                    </div>`;
             }
         }
 
         function renderExams() {
             const container = document.getElementById('exams-container');
             if (exams.length === 0) {
-                container.innerHTML = `<p class='text-center text-slate-300 py-10 italic'>Henüz bir sınav oluşturmadınız.</p>`;
+                container.innerHTML = `<p class='text-center text-slate-300 py-10 italic'>Henüz sınav yok.</p>`;
                 return;
             }
             container.innerHTML = exams.map(ex => `
                 <div class="bg-white p-7 rounded-3xl shadow-sm border flex justify-between items-center hover:shadow-xl transition-all border-slate-100">
                     <div>
                         <h4 class="font-black text-xl text-slate-800 tracking-tight">${ex.title}</h4>
-                        <p class="text-[10px] text-slate-400 font-black uppercase tracking-widest mt-1">${ex.duration} Dakika | ${ex.questions?.length || 0} Soru</p>
+                        <p class="text-[10px] text-slate-400 font-black uppercase mt-1 tracking-widest">${ex.duration} DK | ${ex.questions?.length || 0} SORU</p>
                     </div>
                     <button onclick="openExamManager('${ex.id}')" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black text-sm hover:bg-indigo-600 transition shadow-lg">YÖNET</button>
                 </div>
@@ -297,25 +299,20 @@
         window.createNewExam = async function() {
             const title = document.getElementById('new-exam-name').value;
             const time = document.getElementById('new-exam-time').value;
-            if (!title || !time) return showToast("Lütfen tüm alanları doldurun.");
+            if (!title || !time) return showToast("Boş alan bırakmayın.");
             
-            try {
-                const { error } = await _sb.from('exams').insert([{ title, duration: parseInt(time), questions: [] }]);
-                if (error) throw error;
+            const { error } = await _sb.from('exams').insert([{ title, duration: parseInt(time), questions: [] }]);
+            if (!error) {
                 document.getElementById('new-exam-name').value = '';
                 document.getElementById('new-exam-time').value = '';
                 showToast("Sınav oluşturuldu.");
                 fetchAllExams();
-            } catch (err) {
-                showToast("Kaydetme hatası: " + err.message);
             }
         };
 
         window.openExamManager = function(id) {
             curExam = exams.find(e => e.id === id);
-            if (!curExam) return;
             document.getElementById('m-exam-title').innerText = curExam.title;
-            document.getElementById('m-exam-code').innerText = "KOD: " + curExam.id.substring(0,8);
             switchView('manage-exam');
             renderQuestions();
             fetchStudentsAndSubs();
@@ -324,9 +321,10 @@
         window.copyShareLink = function() {
             const link = window.location.origin + window.location.pathname + '?exam=' + curExam.id;
             navigator.clipboard.writeText(link);
-            showToast("Linki Panoya Kopyalandı!");
+            showToast("Linki Kopyalandı!");
         };
 
+        // --- Soru ve Görsel İşleme ---
         window.handleImagePreview = function(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -347,7 +345,7 @@
             if (text || tempImg) {
                 prev.classList.remove('hidden');
                 pText.innerText = text;
-                pImg.innerHTML = tempImg ? `<img src="${tempImg}" class="rounded-xl border shadow-sm">` : '';
+                pImg.innerHTML = tempImg ? `<img src="${tempImg}" class="max-h-40 rounded-xl border shadow-sm mx-auto">` : '';
             } else {
                 prev.classList.add('hidden');
             }
@@ -356,111 +354,95 @@
         window.saveQuestion = async function() {
             const text = document.getElementById('q-input').value;
             const ans = document.getElementById('q-ans').value;
-            if (!text && !tempImg) return showToast("Soru içeriği girmelisiniz.");
+            if (!text && !tempImg) return;
 
-            try {
-                const updatedQs = [...(curExam.questions || []), { text, correct: ans, image: tempImg }];
-                const { error } = await _sb.from('exams').update({ questions: updatedQs }).eq('id', curExam.id);
-                if (error) throw error;
-
+            const updatedQs = [...(curExam.questions || []), { text, correct: ans, image: tempImg }];
+            const { error } = await _sb.from('exams').update({ questions: updatedQs }).eq('id', curExam.id);
+            
+            if (!error) {
                 curExam.questions = updatedQs;
                 renderQuestions();
                 document.getElementById('q-input').value = '';
                 document.getElementById('q-img-file').value = '';
                 tempImg = null;
                 updateLivePreview();
-                showToast("Soru bankasına eklendi.");
-            } catch (err) {
-                showToast("Soru kaydedilemedi.");
+                showToast("Soru eklendi.");
             }
         };
 
         function renderQuestions() {
             const list = document.getElementById('q-list');
             list.innerHTML = (curExam.questions || []).map((q, i) => `
-                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex justify-between items-center gap-4 transition hover:bg-white">
+                <div class="bg-slate-50 p-4 rounded-2xl border flex justify-between items-center transition hover:bg-white">
                     <div class="overflow-hidden">
                         <span class="text-[10px] font-black text-indigo-500 uppercase">Soru ${i+1}</span>
-                        <p class="text-sm font-bold truncate text-slate-700">${q.text || "(Görsel Soru)"}</p>
+                        <p class="text-sm font-bold truncate">${q.text.substring(0,50)}...</p>
                     </div>
-                    <button onclick="deleteQuestion(${i})" class="text-red-400 p-2 hover:bg-red-50 rounded-lg transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <button onclick="deleteQuestion(${i})" class="text-red-400 p-2"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                 </div>
             `).join('');
             if (window.lucide) window.lucide.createIcons();
         }
 
         window.deleteQuestion = async function(idx) {
-            if (!confirm("Soruyu silmek istediğinize emin misiniz?")) return;
+            if (!confirm("Soru silinsin mi?")) return;
             curExam.questions.splice(idx, 1);
             await _sb.from('exams').update({ questions: curExam.questions }).eq('id', curExam.id);
             renderQuestions();
         };
 
+        // --- Öğrenci ve Sonuç Yönetimi ---
         async function fetchStudentsAndSubs() {
-            try {
-                const { data: stds } = await _sb.from('students').select('*').eq('exam_id', curExam.id);
-                const { data: subs } = await _sb.from('submissions').select('*').eq('exam_id', curExam.id);
+            const { data: stds } = await _sb.from('students').select('*').eq('exam_id', curExam.id);
+            const { data: subs } = await _sb.from('submissions').select('*').eq('exam_id', curExam.id);
 
-                const sList = document.getElementById('s-list');
-                sList.innerHTML = (stds || []).map(s => `
-                    <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                        <span class="font-bold text-sm text-slate-700">${s.name}</span>
-                        <span class="font-mono text-xs bg-yellow-100 px-3 py-1 rounded-lg font-black text-yellow-800 border border-yellow-200">${s.password}</span>
+            const sList = document.getElementById('s-list');
+            sList.innerHTML = (stds || []).map(s => `
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border">
+                    <span class="font-bold text-sm text-slate-700">${s.name}</span>
+                    <span class="font-mono text-xs bg-yellow-100 px-3 py-1 rounded-lg font-black text-yellow-800 border border-yellow-200">${s.password}</span>
+                </div>
+            `).join('');
+
+            const subList = document.getElementById('sub-list');
+            subList.innerHTML = (subs || []).map(sub => `
+                <div class="p-4 rounded-2xl border ${sub.status === 'published' ? 'border-green-500 bg-green-500/10' : 'bg-white/10 border-white/20'} flex justify-between items-center">
+                    <div>
+                        <p class="font-black text-sm">${sub.student_name}</p>
+                        <p class="text-[10px] uppercase font-bold">${sub.status === 'published' ? 'YAYINLANDI' : 'BEKLİYOR'}</p>
                     </div>
-                `).join('');
-
-                const subList = document.getElementById('sub-list');
-                if (!subs || subs.length === 0) {
-                    subList.innerHTML = `<p class="text-[10px] text-slate-500 text-center py-6 font-bold uppercase tracking-widest">HENÜZ YANIT GELMEDİ</p>`;
-                } else {
-                    subList.innerHTML = subs.map(sub => `
-                        <div class="p-4 rounded-2xl border ${sub.status === 'published' ? 'border-green-500/40 bg-green-500/10' : 'bg-white/10 border-white/20'} flex justify-between items-center transition">
-                            <div>
-                                <p class="font-black text-sm">${sub.student_name}</p>
-                                <p class="text-[10px] opacity-60 uppercase font-bold">${sub.status === 'published' ? 'YAYINLANDI' : 'İNCELENİYOR'}</p>
-                            </div>
-                            ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black hover:bg-white hover:text-indigo-600 transition shadow-lg">YAYINLA</button>` : `<i data-lucide="check-circle-2" class="text-green-500"></i>`}
-                        </div>
-                    `).join('');
-                }
-                if (window.lucide) window.lucide.createIcons();
-            } catch (err) { console.error(err); }
+                    ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg">YAYINLA</button>` : `<i data-lucide="check" class="text-green-500"></i>`}
+                </div>
+            `).join('');
+            if (window.lucide) window.lucide.createIcons();
         }
 
         window.addStudent = async function() {
             const name = document.getElementById('s-name-input').value;
             const pass = Math.random().toString(36).substring(2, 7).toUpperCase();
-            if (!name) return showToast("Öğrenci adı girin.");
-            try {
-                const { error } = await _sb.from('students').insert([{ exam_id: curExam.id, name, password: pass }]);
-                if (error) throw error;
-                document.getElementById('s-name-input').value = '';
-                fetchStudentsAndSubs();
-                showToast("Öğrenci başarıyla eklendi.");
-            } catch (err) { showToast("Öğrenci eklenemedi."); }
+            if (!name) return;
+            await _sb.from('students').insert([{ exam_id: curExam.id, name, password: pass }]);
+            document.getElementById('s-name-input').value = '';
+            fetchStudentsAndSubs();
+            showToast("Öğrenci eklendi.");
         };
 
         window.publishResult = async function(id) {
             await _sb.from('submissions').update({ status: 'published' }).eq('id', id);
-            showToast("Sonuç yayınlandı!");
             fetchStudentsAndSubs();
+            showToast("Karne yayınlandı.");
         };
 
+        // --- Öğrenci Sınav Fonksiyonları ---
         window.studentLogin = async function() {
             const eid = document.getElementById('std-exam-id').value.trim();
             const p = document.getElementById('std-pass').value.trim().toUpperCase();
-            if (!eid || !p) return showToast("Gerekli alanları doldurun.");
-
-            try {
-                const { data: ex, error: exErr } = await _sb.from('exams').select('*').ilike('id', `%${eid}%`).single();
-                if (!ex || exErr) return showToast("Sınav bulunamadı.");
-
-                const { data: std, error: stdErr } = await _sb.from('students').select('*').eq('exam_id', ex.id).eq('password', p).single();
-                if (!std || stdErr) return showToast("Şifre hatalı.");
-
-                curStudentSession = { std, ex };
-                startExam();
-            } catch (err) { showToast("Giriş başarısız."); }
+            const { data: ex } = await _sb.from('exams').select('*').ilike('id', `%${eid}%`).single();
+            if (!ex) return showToast("Sınav bulunamadı.");
+            const { data: std } = await _sb.from('students').select('*').eq('exam_id', ex.id).eq('password', p).single();
+            if (!std) return showToast("Hatalı şifre.");
+            curStudentSession = { std, ex };
+            startExam();
         };
 
         function startExam() {
@@ -476,7 +458,6 @@
         function startTimer(m) {
             let t = m * 60;
             const d = document.getElementById('exam-timer');
-            if (timerInt) clearInterval(timerInt);
             timerInt = setInterval(() => {
                 let mm = Math.floor(t / 60), ss = t % 60;
                 d.innerText = `${mm}:${ss < 10 ? '0'+ss : ss}`;
@@ -487,15 +468,12 @@
         function renderExamQuestion() {
             const q = curExam.questions[curQIdx];
             const c = document.getElementById('q-container');
-            if (!q) {
-                c.innerHTML = "<p class='text-center py-20 text-slate-400'>Soru bulunamadı.</p>";
-                return;
-            }
+            if (!q) return;
             c.innerHTML = `
                 <div class="space-y-8 animate-in fade-in duration-500">
-                    <h3 class="text-4xl font-black text-indigo-700 tracking-tighter">Soru ${curQIdx + 1}</h3>
-                    ${q.image ? `<img src="${q.image}" class="max-h-[400px] rounded-[30px] border shadow-md mx-auto object-contain bg-white">` : ''}
-                    <div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap">${q.text || ""}</div>
+                    <h3 class="text-4xl font-black text-indigo-700 uppercase">Soru ${curQIdx + 1}</h3>
+                    ${q.image ? `<img src="${q.image}" class="max-h-[350px] rounded-3xl border shadow-md mx-auto object-contain bg-white">` : ''}
+                    <div class="text-2xl font-medium leading-relaxed">${q.text || ""}</div>
                 </div>
             `;
             document.getElementById('q-btn-prev').disabled = curQIdx === 0;
@@ -508,7 +486,7 @@
                     <span class="w-6 font-black text-slate-300 text-sm">${i+1}</span>
                     <div class="flex gap-2">
                         ${['A','B','C','D','E'].map(o => `
-                            <button onclick="setAns(${i},'${o}')" class="w-10 h-10 rounded-full border-2 font-black text-xs transition-all ${stdAnswers[i] === o ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg' : 'border-slate-100 text-slate-400 bg-white hover:border-indigo-300'}">
+                            <button onclick="setAns(${i},'${o}')" class="w-10 h-10 rounded-full border-2 font-black text-xs transition-all ${stdAnswers[i] === o ? 'bg-indigo-600 border-indigo-600 text-white' : 'border-slate-100 text-slate-400 bg-white hover:border-indigo-300'}">
                                 ${o}
                             </button>
                         `).join('')}
@@ -524,19 +502,18 @@
         };
 
         window.finishExamPrompt = () => {
-            if (confirm("Sınavı bitirmek ve yanıtları öğretmeninize iletmek istiyor musunuz?")) finishExam();
+            if (confirm("Sınavı bitirmek istiyor musunuz?")) finishExam();
         };
 
         async function finishExam() {
             clearInterval(timerInt);
             switchView('wait');
             try {
-                const { data: sub, error } = await _sb.from('submissions').insert([{
+                const { data: sub } = await _sb.from('submissions').insert([{
                     exam_id: curExam.id, student_id: curStudentSession.std.id, student_name: curStudentSession.std.name, answers: stdAnswers, status: 'pending'
                 }]).select().single();
 
-                if (error) throw error;
-
+                // Sonuç yayınlandığında otomatik geçiş
                 const chan = _sb.channel(`sub_${sub.id}`)
                     .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'submissions', filter: `id=eq.${sub.id}` }, payload => {
                         if (payload.new.status === 'published') { 
@@ -544,7 +521,7 @@
                             _sb.removeChannel(chan); 
                         }
                     }).subscribe();
-            } catch (err) { showToast("Sınav gönderilemedi."); }
+            } catch (err) { console.error(err); }
         }
 
         function showFinalResults(sub) {
@@ -559,7 +536,7 @@
                     <div class="inline-block p-10 bg-indigo-50 rounded-full border-4 border-indigo-600 shadow-xl mb-4">
                         <span class="text-7xl font-black text-indigo-700">%${s}</span>
                     </div>
-                    <p class="text-slate-400 font-black uppercase tracking-widest text-sm">Başarı Oranı</p>
+                    <p class="text-slate-400 font-bold uppercase tracking-widest text-sm">Başarı Oranı</p>
                 </div>
                 <div class="space-y-3">
                     ${curExam.questions.map((q, i) => `
