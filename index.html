@@ -85,7 +85,7 @@
             <div class="flex items-center gap-4">
                 <button onclick="navigate('portal')" class="text-sm font-bold opacity-80 hover:opacity-100 transition px-2 font-black uppercase">Ana Sayfa</button>
                 <button id="teacher-nav-btn" onclick="navigate('teacher-login')" class="bg-white/20 hover:bg-white/30 px-5 py-2 rounded-xl text-sm font-black transition flex items-center gap-2 uppercase tracking-tighter shadow-sm">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     Panel
                 </button>
             </div>
@@ -102,8 +102,8 @@
     </section>
 
     <!-- 2. ÖĞRETMEN GİRİŞ EKRANI -->
-    <section id="teacher-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100 text-center">
+    <section id="teacher-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4 text-center">
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100">
             <h2 class="text-3xl font-black mb-8 text-slate-800 tracking-tight">Yönetici Girişi</h2>
             <div class="space-y-5 text-left">
                 <input type="email" id="t-email" placeholder="E-Posta" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-indigo-500 font-bold transition text-sm">
@@ -147,8 +147,8 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </button>
                 <div>
-                    <h2 id="m-exam-title" class="text-4xl font-black text-slate-900 tracking-tighter uppercase">Sınav Düzenle</h2>
-                    <p id="m-exam-code-display" class="text-sm font-bold text-indigo-600 mt-1 uppercase tracking-widest font-mono">KOD: ---</p>
+                    <h2 id="m-exam-title" class="text-4xl font-black text-slate-900 tracking-tighter uppercase text-left">Sınav Düzenle</h2>
+                    <p id="m-exam-code-display" class="text-sm font-bold text-indigo-600 mt-1 uppercase tracking-widest font-mono text-left">KOD: ---</p>
                 </div>
             </div>
             <button onclick="copyShareLink()" class="bg-indigo-50 text-indigo-600 px-8 py-4 rounded-2xl font-black text-sm flex items-center gap-3 hover:bg-indigo-100 transition shadow-sm border border-indigo-100">
@@ -158,7 +158,6 @@
         </div>
 
         <div class="grid lg:grid-cols-12 gap-10">
-            <!-- Sol: Soru Bankası -->
             <div class="lg:col-span-7 space-y-8">
                 <div class="bg-white p-8 rounded-[40px] shadow-xl border border-slate-50 h-fit">
                     <h3 id="q-editor-title" class="text-xl font-black mb-6 text-indigo-600 flex items-center gap-2">
@@ -182,7 +181,7 @@
                         <div id="live-preview" class="p-5 bg-white rounded-2xl border hidden shadow-inner">
                             <p class="text-[10px] font-black text-indigo-400 uppercase mb-2 tracking-tighter">Canlı Önizleme</p>
                             <div id="preview-img-container" class="mb-3 text-center"></div>
-                            <p id="preview-text" class="text-sm font-medium whitespace-pre-wrap"></p>
+                            <p id="preview-text" class="text-sm font-medium whitespace-pre-wrap text-left"></p>
                         </div>
                         <div class="flex gap-2">
                             <button id="save-q-btn" onclick="saveQuestion()" class="flex-1 bg-indigo-600 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 uppercase tracking-tighter">
@@ -228,8 +227,8 @@
         <div class="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl max-h-[85vh] flex flex-col">
             <div class="p-8 border-b flex justify-between items-center bg-slate-50/50 rounded-t-[40px]">
                 <div class="text-left">
-                    <h3 id="modal-student-name" class="text-2xl font-black text-slate-800">Analiz Raporu</h3>
-                    <p id="modal-exam-info" class="text-xs font-bold text-slate-400 uppercase tracking-tighter mt-1"></p>
+                    <h3 id="modal-student-name" class="text-2xl font-black text-slate-800 tracking-tight">Analiz Raporu</h3>
+                    <p id="modal-exam-info" class="text-xs font-bold text-slate-400 uppercase tracking-tighter mt-1 font-mono"></p>
                 </div>
                 <button onclick="closeModal()" class="bg-white p-3 rounded-2xl shadow-sm hover:text-red-500 transition flex items-center justify-center">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -265,6 +264,10 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <span id="active-title" class="font-black text-sm uppercase tracking-widest">OTURUM AÇIK</span>
+                <!-- Tam Ekran Butonu -->
+                <button onclick="toggleFullScreen()" class="bg-white/10 p-2 rounded-xl hover:bg-white/20 flex items-center justify-center ml-2" title="Tam Ekran">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
             </div>
             <div id="exam-timer-box" class="bg-white text-indigo-700 px-6 py-2 rounded-2xl font-mono font-black text-xl shadow-inner border border-indigo-100 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -298,7 +301,7 @@
                     </div>
                     <div class="flex gap-2">
                         <button id="q-btn-prev" onclick="navQ(-1)" class="bg-slate-100 text-slate-400 px-8 py-3 rounded-2xl font-black uppercase tracking-tighter transition hover:bg-slate-200">Geri</button>
-                        <button id="q-btn-next" onclick="navQ(1)" class="bg-indigo-600 text-white px-10 py-3 rounded-2xl font-black shadow-lg transition hover:bg-indigo-700 uppercase tracking-tighter">İleri</button>
+                        <button id="q-btn-next" onclick="navQ(1)" class="bg-indigo-600 text-white px-10 py-3 rounded-2xl font-black shadow-lg uppercase tracking-tighter transition hover:bg-indigo-700">İleri</button>
                     </div>
                 </div>
             </div>
@@ -316,7 +319,7 @@
 
     <!-- BEKLEME PANELİ -->
     <section id="wait-section" class="view-section hidden max-w-xl mx-auto mt-32 px-4 text-center">
-        <div class="bg-white p-16 rounded-[60px] shadow-2xl relative overflow-hidden border border-indigo-50">
+        <div class="bg-white p-16 rounded-[60px] shadow-2xl relative overflow-hidden border border-indigo-50 text-center">
             <div class="absolute inset-0 bg-indigo-600/5 waiting-rotate rounded-full -m-20"></div>
             <div class="relative z-10 text-center">
                 <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg shadow-indigo-100"></div>
@@ -343,7 +346,7 @@
 
         let exams = [], curExam = null, curStudentSession = null, stdAnswers = {}, curQIdx = 0, timerInt = null, tempImg = null;
         let isEditMode = false, editingQIdx = -1, isTeacherMode = false;
-        let questionDrawings = {}; // Çizimleri tutacak hafıza objesi
+        let questionDrawings = {}; // Çizimleri tutacak hafıza
 
         // --- TAHTA (WHITEBOARD) ---
         let canvas, ctx, drawing = false, tool = 'pen', wbActive = false;
@@ -427,6 +430,19 @@
             if(permanent) delete questionDrawings[curQIdx];
         };
 
+        // --- TAM EKRAN ---
+        window.toggleFullScreen = () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    showToast("Tam ekran yapılamadı!");
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        };
+
         // --- UI ---
         function setProgress(percent) {
             const bar = document.getElementById('global-loader');
@@ -485,7 +501,7 @@
             if (e === 'alisengulidu@gmail.com' && p === '352477Ali') {
                 localStorage.setItem('matota_auth', JSON.stringify({ isTeacher: true }));
                 navigate('teacher-dashboard');
-                document.getElementById('teacher-nav-btn').innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Panelim`;
+                document.getElementById('teacher-nav-btn').innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Panelim`;
             } else showToast("Hatalı Giriş Bilgileri!");
         };
 
@@ -605,14 +621,14 @@
             document.getElementById('q-list').innerHTML = (curExam.questions || []).map((q, i) => `
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex justify-between items-center transition group">
                     <div class="overflow-hidden flex-1 text-left">
-                        <span class="text-[10px] font-black text-indigo-500 uppercase">Soru ${i+1}</span>
-                        <p class="text-sm font-bold truncate text-slate-700 uppercase">${q.text || "(Görsel)"}</p>
+                        <span class="text-[10px] font-black text-indigo-500 uppercase font-mono">Soru ${i+1}</span>
+                        <p class="text-sm font-bold truncate text-slate-700 uppercase">${q.text || "(Görsel Soru)"}</p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="editQuestion(${i})" class="text-indigo-500 p-2 hover:bg-white rounded-xl shadow-sm">
+                        <button onclick="editQuestion(${i})" class="text-indigo-500 p-2 hover:bg-white rounded-xl shadow-sm transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <button onclick="deleteQuestion(${i})" class="text-red-400 p-2 hover:bg-white rounded-xl shadow-sm">
+                        <button onclick="deleteQuestion(${i})" class="text-red-400 p-2 hover:bg-white rounded-xl shadow-sm transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                     </div>
@@ -651,10 +667,10 @@
                         <p class="text-[9px] opacity-60 font-bold text-white tracking-tighter uppercase">Analiz</p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="giveExtraTime('${sub.id}')" class="bg-orange-600 text-white p-2 rounded-xl shadow-lg hover:bg-orange-700" title="Süreyi Aç">
+                        <button onclick="giveExtraTime('${sub.id}')" class="bg-orange-600 text-white p-2 rounded-xl shadow-lg hover:bg-orange-700 transition" title="Süreyi Aç">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3" stroke-linecap="round"/></svg>
                         </button>
-                        ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black uppercase">Yayınla</button>` : `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
+                        ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black">YAYINLA</button>` : `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
                     </div>
                 </div>`).join('');
         }
@@ -681,8 +697,8 @@
             document.getElementById('modal-answers-content').innerHTML = curExam.questions.map((q, i) => {
                 const stdAns = sub.answers[i] || '-', isCorrect = stdAns === q.correct;
                 return `<div class="p-5 rounded-3xl border-2 ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
-                    <p class="text-sm font-bold text-slate-700 mb-3">${q.text || "(Görsel Soru)"}</p>
-                    <div class="flex gap-4 font-black text-xs uppercase">
+                    <p class="text-sm font-bold text-slate-700 mb-3 text-left uppercase font-mono tracking-tight">${q.text || "(Görsel Soru)"}</p>
+                    <div class="flex gap-4 font-black text-xs uppercase font-mono">
                         <span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">Giriş: ${stdAns}</span>
                         <span class="text-indigo-600">Doğru: ${q.correct}</span>
                     </div>
@@ -706,7 +722,7 @@
             fetchStudentsAndSubs();
         };
 
-        // --- SINAV AKIŞI ---
+        // --- EXAM FLOW ---
         window.solveAsTeacher = (id) => {
             curExam = exams.find(e => e.id === id);
             curStudentSession = null;
@@ -714,7 +730,7 @@
             document.getElementById('active-title').innerText = "ÖĞRETMEN ÇÖZÜM MODU";
             document.getElementById('exam-timer-box').classList.add('hidden');
             document.getElementById('finish-btn').classList.add('hidden');
-            questionDrawings = {}; // Temizle
+            questionDrawings = {};
             navigate('exam');
         };
 
@@ -739,7 +755,7 @@
             document.getElementById('active-title').innerText = ex.title;
             document.getElementById('exam-timer-box').classList.remove('hidden');
             document.getElementById('finish-btn').classList.remove('hidden');
-            questionDrawings = {}; // Temizle
+            questionDrawings = {};
             
             setTimeout(() => { setCentralLoader(false); navigate('exam'); startTimer(curExam.duration); }, 600);
         };
@@ -755,7 +771,7 @@
         }
 
         function renderExamQuestion() {
-            clearCanvas(); // Önce temizle
+            clearCanvas();
             const q = curExam.questions[curQIdx];
             const c = document.getElementById('q-container');
             if (!q) return;
@@ -763,10 +779,9 @@
                 <div class="space-y-8 animate-in fadeIn duration-500 text-left">
                     <h3 class="text-4xl font-black text-indigo-700 font-mono uppercase tracking-tighter">Soru ${curQIdx + 1}</h3>
                     ${q.image ? `<div class="bg-white p-2 rounded-3xl border shadow-sm"><img src="${q.image}" class="max-h-[400px] w-full object-contain mx-auto"></div>` : ''}
-                    <div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap">${q.text || ""}</div>
+                    <div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap font-mono uppercase tracking-tight">${q.text || ""}</div>
                 </div>`;
             
-            // Eğer bu soru için çizim varsa geri yükle
             if (questionDrawings[curQIdx]) {
                 const img = new Image();
                 img.onload = () => ctx.drawImage(img, 0, 0);
@@ -792,7 +807,6 @@
         window.setAns = (i, o) => { if(!isTeacherMode) { stdAnswers[i] = o; renderOpticalForm(); } };
 
         window.navQ = (d) => { 
-            // Mevcut çizimi kaydet
             if (canvas) questionDrawings[curQIdx] = canvas.toDataURL();
 
             if (d === 1 && curQIdx === curExam.questions.length - 1) { 
@@ -820,7 +834,7 @@
                         _sb.removeChannel(chan);
                         const end = new Date(payload.new.extra_time_until), now = new Date();
                         navigate('exam'); startTimer(Math.floor((end - now) / 60000));
-                        showToast("Süre eklendi!");
+                        showToast("Ek süre tanımlandı!");
                     }
                     if (payload.new.status === 'published') { showFinalResults(payload.new); _sb.removeChannel(chan); }
                 }).subscribe();
@@ -834,9 +848,9 @@
                 <div class="text-center mb-10"><div class="inline-block p-10 bg-indigo-50 rounded-full border-4 border-indigo-600 shadow-xl mb-4 font-black text-7xl text-indigo-700">%${s}</div></div>
                 <div class="space-y-3">
                     ${curExam.questions.map((q, i) => `
-                        <div class="flex justify-between p-5 rounded-3xl border-2 ${sub.answers[i] === q.correct ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}">
-                            <span class="font-bold">Soru ${i+1}</span>
-                            <span class="font-black text-xs uppercase text-right">Sen: ${sub.answers[i] || '-'} | Doğru: ${q.correct}</span>
+                        <div class="flex justify-between p-5 rounded-3xl border-2 ${sub.answers[i] === q.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} transition-all hover:scale-[1.01]">
+                            <span class="font-bold font-mono">Soru ${i+1}</span>
+                            <span class="font-black text-xs uppercase text-mono">Sen: ${sub.answers[i] || '-'} | Doğru: ${q.correct}</span>
                         </div>`).join('')}
                 </div>`;
         }
