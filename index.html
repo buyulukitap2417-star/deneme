@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MATOTA - Profesyonel Sınav & Değerlendirme</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.0/lucide.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @keyframes spin-slow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
@@ -78,13 +79,13 @@
     <nav class="bg-indigo-700 text-white p-4 shadow-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('portal')">
-                <div class="bg-white text-indigo-700 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl shadow-inner">M</div>
+                <div class="bg-white text-indigo-700 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl shadow-inner border border-white/20">M</div>
                 <h1 class="text-2xl font-black tracking-tighter uppercase">MATOTA</h1>
             </div>
             <div class="flex items-center gap-4">
                 <button onclick="navigate('portal')" class="text-sm font-bold opacity-80 hover:opacity-100 transition px-2 font-black uppercase">Ana Sayfa</button>
-                <button id="teacher-nav-btn" onclick="navigate('teacher-login')" class="bg-white/20 hover:bg-white/30 px-5 py-2 rounded-xl text-sm font-black transition flex items-center gap-2 uppercase tracking-tighter">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                <button id="teacher-nav-btn" onclick="navigate('teacher-login')" class="bg-white/20 hover:bg-white/30 px-5 py-2 rounded-xl text-sm font-black transition flex items-center gap-2 uppercase tracking-tighter shadow-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     Panel
                 </button>
             </div>
@@ -130,7 +131,7 @@
                         <input type="text" id="new-exam-name" placeholder="Sınav Adı" class="w-full p-4 border rounded-2xl outline-none font-bold text-sm bg-slate-50 focus:bg-white transition">
                         <input type="text" id="new-exam-code" placeholder="Sınav Kodu (Örn: MAT01)" class="w-full p-4 border rounded-2xl outline-none font-bold uppercase text-sm bg-slate-50 focus:bg-white transition">
                         <input type="number" id="new-exam-time" placeholder="Süre (Dakika)" class="w-full p-4 border rounded-2xl outline-none font-bold text-sm bg-slate-50 focus:bg-white transition">
-                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg transition">OLUŞTUR</button>
+                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg transition uppercase">Oluştur</button>
                     </div>
                 </div>
             </div>
@@ -157,13 +158,14 @@
         </div>
 
         <div class="grid lg:grid-cols-12 gap-10">
+            <!-- Soru Paneli -->
             <div class="lg:col-span-7 space-y-8">
                 <div class="bg-white p-8 rounded-[40px] shadow-xl border border-slate-50 h-fit">
                     <h3 id="q-editor-title" class="text-xl font-black mb-6 text-indigo-600 flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         Soru Ekle
                     </h3>
-                    <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 space-y-4">
+                    <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 space-y-4 mb-8">
                         <textarea id="q-input" oninput="updateLivePreview()" placeholder="Soru metni..." class="w-full p-5 border rounded-2xl h-32 outline-none font-medium focus:bg-white transition text-sm"></textarea>
                         <div class="grid grid-cols-2 gap-4">
                             <select id="q-ans" class="p-4 border rounded-2xl font-black text-sm bg-white outline-none">
@@ -172,7 +174,7 @@
                                 <option value="E">Cevap: E</option>
                             </select>
                             <label class="p-4 border rounded-2xl bg-white cursor-pointer flex items-center justify-center gap-2 font-bold text-xs text-slate-500 hover:border-indigo-500 transition">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 <span id="img-btn-text">Görsel Seç</span>
                                 <input type="file" id="q-img-file" onchange="handleImagePreview(event)" accept="image/*" class="hidden">
                             </label>
@@ -187,7 +189,7 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 KAYDET
                             </button>
-                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-200 text-slate-600 rounded-2xl font-bold hidden">İptal</button>
+                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-200 text-slate-600 rounded-2xl font-bold hidden uppercase tracking-tighter">İptal</button>
                         </div>
                     </div>
                     <div id="q-list" class="mt-8 space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar"></div>
@@ -222,14 +224,48 @@
         </div>
     </section>
 
-    <!-- SINAV EKRANI (Ortak Öğrenci/Öğretmen) -->
+    <!-- ANALİZ MODALI -->
+    <div id="details-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-[40px] shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="p-8 border-b flex justify-between items-center bg-slate-50/50 rounded-t-[40px]">
+                <div>
+                    <h3 id="modal-student-name" class="text-2xl font-black text-slate-800">Analiz Raporu</h3>
+                    <p id="modal-exam-info" class="text-xs font-bold text-slate-400 uppercase tracking-tighter mt-1"></p>
+                </div>
+                <button onclick="closeModal()" class="bg-white p-3 rounded-2xl shadow-sm hover:text-red-500 transition flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+            </div>
+            <div id="modal-answers-content" class="p-8 overflow-y-auto custom-scrollbar flex-1 space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- ÖĞRENCİ GİRİŞİ -->
+    <section id="student-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4">
+        <div class="bg-white p-12 rounded-[50px] shadow-2xl border text-center">
+            <h2 class="text-3xl font-black mb-10 tracking-tighter uppercase">Sınava Katıl</h2>
+            <div class="space-y-6 text-left">
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Sınav Kodu</label>
+                    <input type="text" id="std-exam-id" placeholder="ÖRN: MAT1" class="w-full p-5 bg-slate-50 border-2 rounded-3xl outline-none font-bold text-center uppercase tracking-widest focus:border-indigo-500 transition">
+                </div>
+                <div>
+                    <label class="text-[10px] font-black text-slate-400 uppercase ml-2 tracking-widest">Özel Şifreniz</label>
+                    <input type="password" id="std-pass" placeholder="ÖZEL ŞİFRE" class="w-full p-5 bg-slate-50 border-2 rounded-3xl outline-none font-bold text-center tracking-widest focus:border-indigo-500 transition">
+                </div>
+                <button onclick="studentLogin()" class="w-full bg-indigo-600 text-white py-5 rounded-[24px] font-black text-lg shadow-2xl hover:bg-indigo-700 transition">BAŞLAT</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- SINAV EKRANI -->
     <section id="exam-section" class="view-section hidden min-h-screen bg-white">
         <header class="bg-indigo-600 text-white p-5 flex justify-between items-center sticky top-0 z-[60] shadow-lg">
             <div class="flex items-center gap-4">
-                <button onclick="exitExam()" class="bg-white/10 p-2 rounded-xl hover:bg-white/20">
+                <button onclick="exitExam()" class="bg-white/10 p-2 rounded-xl hover:bg-white/20 flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <span id="active-title" class="font-black text-sm uppercase tracking-widest">OTURUM</span>
+                <span id="active-title" class="font-black text-sm uppercase tracking-widest">OTURUM AÇIK</span>
             </div>
             <div id="exam-timer-box" class="bg-white text-indigo-700 px-6 py-2 rounded-2xl font-mono font-black text-xl shadow-inner border border-indigo-100 flex items-center gap-2">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -238,7 +274,6 @@
         </header>
         
         <div class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-10">
-            <!-- Soru ve Tahta -->
             <div class="lg:col-span-8 space-y-6">
                 <div id="q-area" class="relative bg-slate-50 rounded-[45px] shadow-inner border border-slate-100 min-h-[500px] overflow-hidden">
                     <div id="q-container" class="p-12 relative z-0"></div>
@@ -250,21 +285,21 @@
                 <!-- Tahta Araçları -->
                 <div class="bg-white p-4 rounded-3xl shadow-lg border border-indigo-50 flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <button onclick="setTool('pen')" id="tool-pen" class="bg-indigo-600 text-white p-3 rounded-2xl shadow-md tool-btn">
+                        <button onclick="setTool('pen')" id="tool-pen" class="bg-indigo-600 text-white p-3 rounded-2xl shadow-md tool-btn flex items-center justify-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <button onclick="setTool('eraser')" id="tool-eraser" class="bg-slate-100 text-slate-500 p-3 rounded-2xl tool-btn hover:bg-slate-200">
+                        <button onclick="setTool('eraser')" id="tool-eraser" class="bg-slate-100 text-slate-500 p-3 rounded-2xl tool-btn hover:bg-slate-200 flex items-center justify-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
-                        <button onclick="clearCanvas()" class="bg-red-50 text-red-500 p-3 rounded-2xl hover:bg-red-100">
+                        <button onclick="clearCanvas()" class="bg-red-50 text-red-500 p-3 rounded-2xl hover:bg-red-100 flex items-center justify-center">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                         <div class="h-8 w-px bg-slate-200 mx-2"></div>
-                        <button onclick="toggleWhiteboard()" id="btn-toggle-wb" class="text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-slate-900 text-white rounded-xl">Kalemi Aç</button>
+                        <button onclick="toggleWhiteboard()" id="btn-toggle-wb" class="text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-slate-900 text-white rounded-xl transition">Kalemi Aç</button>
                     </div>
                     <div class="flex gap-2">
-                        <button id="q-btn-prev" onclick="navQ(-1)" class="bg-slate-100 text-slate-400 px-8 py-3 rounded-2xl font-black">GERİ</button>
-                        <button id="q-btn-next" onclick="navQ(1)" class="bg-indigo-600 text-white px-10 py-3 rounded-2xl font-black shadow-lg">İLERİ</button>
+                        <button id="q-btn-prev" onclick="navQ(-1)" class="bg-slate-100 text-slate-400 px-10 py-4 rounded-3xl font-black transition hover:bg-slate-200">GERİ</button>
+                        <button id="q-btn-next" onclick="navQ(1)" class="bg-indigo-600 text-white px-12 py-5 rounded-3xl font-black shadow-lg transition hover:bg-indigo-700 uppercase">İleri</button>
                     </div>
                 </div>
             </div>
@@ -285,7 +320,7 @@
         <div class="bg-white p-16 rounded-[60px] shadow-2xl relative overflow-hidden border border-indigo-50">
             <div class="absolute inset-0 bg-indigo-600/5 waiting-rotate rounded-full -m-20"></div>
             <div class="relative z-10 text-center">
-                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg"></div>
+                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg shadow-indigo-100"></div>
                 <h2 class="text-4xl font-black text-slate-800 mb-6 uppercase tracking-tight">Sınav Bitti</h2>
                 <p class="text-xl text-indigo-500 font-bold italic mb-2">"Öğretmeninizin Sonucunuzu Yayınlaması Bekleniyor..."</p>
             </div>
@@ -296,9 +331,9 @@
     <section id="result-section" class="view-section hidden max-w-2xl mx-auto mt-16 px-4 pb-20 text-center">
         <div class="bg-white p-12 rounded-[50px] shadow-2xl border relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-indigo-500 to-green-500"></div>
-            <h2 class="text-5xl font-black text-center mb-12 tracking-tighter uppercase text-indigo-700">Sınav Karnesi</h2>
+            <h2 class="text-5xl font-black text-center mb-12 tracking-tighter uppercase text-indigo-700">Deneme Karnesi</h2>
             <div id="res-content" class="space-y-4 text-left"></div>
-            <button onclick="location.reload()" class="w-full mt-12 bg-slate-900 text-white py-6 rounded-3xl font-black">ANA SAYFA</button>
+            <button onclick="location.reload()" class="w-full mt-12 bg-slate-900 text-white py-6 rounded-3xl font-black shadow-xl">ANA SAYFA</button>
         </div>
     </section>
 
@@ -313,8 +348,15 @@
         // --- TAHTA (WHITEBOARD) ---
         let canvas, ctx, drawing = false, tool = 'pen', wbActive = false;
 
+        function refreshIcons() {
+            if (window.lucide) {
+                setTimeout(() => window.lucide.createIcons(), 50);
+            }
+        }
+
         function setupWhiteboard() {
             canvas = document.getElementById('whiteboard-canvas');
+            if(!canvas) return;
             ctx = canvas.getContext('2d');
             const container = document.getElementById('q-area');
             canvas.width = container.offsetWidth;
@@ -323,28 +365,29 @@
             ctx.lineCap = 'round';
             ctx.lineWidth = 3;
 
+            const getPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
+                const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+                return { x, y };
+            };
+
             const startDraw = (e) => {
                 if(!wbActive) return;
                 drawing = true;
+                const pos = getPos(e);
                 ctx.beginPath();
-                const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || e.touches[0].clientX) - rect.left;
-                const y = (e.clientY || e.touches[0].clientY) - rect.top;
-                ctx.moveTo(x, y);
+                ctx.moveTo(pos.x, pos.y);
             };
 
             const draw = (e) => {
                 if(!drawing || !wbActive) return;
                 e.preventDefault();
-                const rect = canvas.getBoundingClientRect();
-                const x = (e.clientX || e.touches[0].clientX) - rect.left;
-                const y = (e.clientY || e.touches[0].clientY) - rect.top;
-                
+                const pos = getPos(e);
                 ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
                 ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : '#4f46e5';
-                ctx.lineWidth = tool === 'eraser' ? 25 : 3;
-
-                ctx.lineTo(x, y);
+                ctx.lineWidth = tool === 'eraser' ? 30 : 3;
+                ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
             };
 
@@ -375,16 +418,18 @@
 
         window.setTool = (t) => {
             tool = t;
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.replace('bg-indigo-600', 'bg-slate-100'));
-            document.querySelectorAll('.tool-btn').forEach(b => b.classList.replace('text-white', 'text-slate-500'));
+            document.querySelectorAll('.tool-btn').forEach(b => {
+                b.classList.remove('bg-indigo-600', 'text-white');
+                b.classList.add('bg-slate-100', 'text-slate-500');
+            });
             const active = document.getElementById(`tool-${t}`);
             active.classList.replace('bg-slate-100', 'bg-indigo-600');
             active.classList.replace('text-slate-500', 'text-white');
         };
 
-        window.clearCanvas = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
+        window.clearCanvas = () => ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // --- CORE ---
+        // --- UI ---
         function setProgress(percent) {
             const bar = document.getElementById('global-loader');
             const fill = document.getElementById('loader-fill');
@@ -402,6 +447,7 @@
             document.getElementById('central-loader').classList.toggle('hidden', !v);
         }
 
+        // --- CORE ---
         function init() {
             if (window.supabase) {
                 _sb = window.supabase.createClient(SB_URL, SB_KEY);
@@ -427,7 +473,11 @@
             if (target) target.classList.remove('hidden');
             window.location.hash = view;
             if (view === 'teacher-dashboard') fetchAllExams();
-            if (view === 'exam') setTimeout(setupWhiteboard, 200);
+            if (view === 'exam') {
+                setTimeout(setupWhiteboard, 300);
+                renderOpticalForm();
+            }
+            refreshIcons();
             window.scrollTo(0,0);
         };
 
@@ -438,8 +488,8 @@
             if (e === 'alisengulidu@gmail.com' && p === '352477Ali') {
                 localStorage.setItem('matota_auth', JSON.stringify({ isTeacher: true }));
                 navigate('teacher-dashboard');
-                document.getElementById('teacher-nav-btn').innerText = "Panelim";
-            } else showToast("Hatalı Giriş!");
+                document.getElementById('teacher-nav-btn').innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Panelim`;
+            } else showToast("Hatalı Giriş Bilgileri!");
         };
 
         window.logout = () => { localStorage.clear(); location.reload(); };
@@ -457,9 +507,9 @@
             document.getElementById('exams-container').innerHTML = exams.map(ex => `
                 <div class="bg-white p-7 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center hover:shadow-xl transition-all group">
                     <div>
-                        <h4 class="font-black text-xl text-slate-800 tracking-tight uppercase">${ex.title}</h4>
+                        <h4 class="font-black text-xl text-slate-800 tracking-tight group-hover:text-indigo-600 transition-colors uppercase">${ex.title}</h4>
                         <p class="text-[10px] text-slate-400 font-black uppercase mt-1 tracking-widest font-mono">
-                            KOD: <span class="text-indigo-600">${ex.code || ex.id.substring(0,8)}</span> | ${ex.questions?.length || 0} SORU
+                            KOD: <span class="text-indigo-600">${ex.code || ex.id.substring(0,8)}</span> | ${ex.duration} DK | ${ex.questions?.length || 0} SORU
                         </p>
                     </div>
                     <div class="flex gap-2">
@@ -478,13 +528,16 @@
             setProgress(50);
             const { error } = await _sb.from('exams').insert([{ title, code, duration: parseInt(time), questions: [] }]);
             setProgress(100);
-            if (error) return showToast("Hata!");
+            if (error) return showToast("Bu kod kullanılıyor olabilir!");
             fetchAllExams();
-            showToast("Oluşturuldu.");
+            showToast("Sınav oluşturuldu.");
         };
 
         window.openExamManager = (id) => {
             curExam = exams.find(e => e.id === id);
+            if(!curExam) return;
+            const session = JSON.parse(localStorage.getItem('matota_auth') || '{}');
+            localStorage.setItem('matota_auth', JSON.stringify({ ...session, curExamId: id }));
             document.getElementById('m-exam-title').innerText = curExam.title;
             document.getElementById('m-exam-code-display').innerText = "KOD: " + (curExam.code || curExam.id.substring(0,8));
             resetQuestionEditor();
@@ -496,7 +549,7 @@
         window.copyShareLink = () => {
             const c = curExam.code || curExam.id;
             navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?exam=' + encodeURIComponent(c));
-            showToast("Kopyalandı!");
+            showToast("Bağlantı kopyalandı!");
         };
 
         // --- SORU EDİTÖRÜ ---
@@ -546,7 +599,7 @@
             document.getElementById('q-input').value = '';
             document.getElementById('img-btn-text').innerText = "Görsel Seç";
             document.getElementById('q-editor-title').innerText = "Yeni Soru Ekle";
-            document.getElementById('save-q-btn').innerText = "KAYDET";
+            document.getElementById('save-q-btn').innerText = "SORUYU KAYDET";
             document.getElementById('cancel-edit-btn').classList.add('hidden');
             updateLivePreview();
         };
@@ -554,68 +607,87 @@
         function renderQuestionsInManager() {
             document.getElementById('q-list').innerHTML = (curExam.questions || []).map((q, i) => `
                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex justify-between items-center transition group">
-                    <div class="overflow-hidden flex-1">
+                    <div class="overflow-hidden flex-1 text-left">
                         <span class="text-[10px] font-black text-indigo-500 uppercase">Soru ${i+1}</span>
-                        <p class="text-sm font-bold truncate text-slate-700">${q.text || "(Görsel)"}</p>
+                        <p class="text-sm font-bold truncate text-slate-700 uppercase">${q.text || "(Görsel)"}</p>
                     </div>
-                    <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition">
-                        <button onclick="editQuestion(${i})" class="text-indigo-500 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2"/></svg></button>
-                        <button onclick="deleteQuestion(${i})" class="text-red-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7" stroke-width="2"/></svg></button>
+                    <div class="flex gap-2">
+                        <button onclick="editQuestion(${i})" class="text-indigo-500 p-2 hover:bg-white rounded-xl shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                        <button onclick="deleteQuestion(${i})" class="text-red-400 p-2 hover:bg-white rounded-xl shadow-sm">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
                     </div>
                 </div>`).join('');
         }
 
         window.deleteQuestion = async (idx) => {
-            if(!confirm("Silinsin mi?")) return;
+            if(!confirm("Soru silinsin mi?")) return;
             curExam.questions.splice(idx, 1);
             await _sb.from('exams').update({ questions: curExam.questions }).eq('id', curExam.id);
             renderQuestionsInManager();
         };
 
-        // --- ÖĞRENCİ & EK SÜRE ---
+        // --- STUDENT MGMT ---
         async function fetchStudentsAndSubs() {
             const { data: stds } = await _sb.from('students').select('*').eq('exam_id', curExam.id);
             const { data: subs } = await _sb.from('submissions').select('*').eq('exam_id', curExam.id);
 
             document.getElementById('s-list').innerHTML = (stds || []).map(s => `
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border">
-                    <span class="font-bold text-sm text-slate-700 uppercase">${s.name}</span>
-                    <span class="font-mono text-[9px] bg-yellow-100 px-2 rounded-lg font-black text-yellow-800 uppercase">${s.password}</span>
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                    <div class="flex flex-col text-left">
+                        <span class="font-bold text-sm text-slate-700 uppercase">${s.name}</span>
+                        <span class="font-mono text-[9px] bg-yellow-100 px-2 rounded-lg font-black text-yellow-800 uppercase w-fit mt-1">${s.password}</span>
+                    </div>
+                    <button onclick="deleteStudent('${s.id}')" class="text-red-400 p-2 hover:bg-red-50 rounded-xl transition">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                 </div>`).join('');
 
-            document.getElementById('sub-list').innerHTML = (subs || []).map(sub => `
-                <div class="p-4 rounded-2xl border ${sub.status === 'published' ? 'bg-green-500/10' : 'bg-white/10'} flex justify-between items-center">
-                    <div class="cursor-pointer flex-1" onclick="viewDetails('${sub.id}')">
+            const subList = document.getElementById('sub-list');
+            if (!subs || subs.length === 0) subList.innerHTML = `<p class="text-[10px] text-slate-500 text-center py-6 font-bold uppercase opacity-50 tracking-widest">Yanıt yok</p>`;
+            else subList.innerHTML = subs.map(sub => `
+                <div class="p-4 rounded-2xl border ${sub.status === 'published' ? 'border-green-500/40 bg-green-500/10' : 'bg-white/10 border-white/20'} flex justify-between items-center">
+                    <div class="cursor-pointer flex-1 text-left" onclick="viewDetails('${sub.id}')">
                         <p class="font-black text-sm text-white uppercase">${sub.student_name}</p>
-                        <p class="text-[9px] opacity-60 uppercase font-black">Analiz</p>
+                        <p class="text-[9px] opacity-60 font-bold text-white tracking-tighter uppercase">Analiz</p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="giveExtraTime('${sub.id}')" class="bg-orange-600 text-white p-2 rounded-xl shadow-lg hover:bg-orange-700" title="Ek Süre Ver">
+                        <button onclick="giveExtraTime('${sub.id}')" class="bg-orange-600 text-white p-2 rounded-xl shadow-lg hover:bg-orange-700" title="Süreyi Aç">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3" stroke-linecap="round"/></svg>
                         </button>
-                        ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black">YAYINLA</button>` : `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/></svg>`}
+                        ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black uppercase">Yayınla</button>` : `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
                     </div>
                 </div>`).join('');
         }
 
+        window.deleteStudent = async function(id) {
+            if (!confirm("Öğrenci silinsin mi?")) return;
+            await _sb.from('students').delete().eq('id', id);
+            fetchStudentsAndSubs();
+        };
+
         window.giveExtraTime = async (id) => {
-            const mins = prompt("Öğrenciye kaç dakika eklemek istiyorsunuz?", "10");
+            const mins = prompt("Kaç dakika eklensin?", "10");
             if (!mins) return;
             const until = new Date(Date.now() + parseInt(mins) * 60000).toISOString();
-            const { error } = await _sb.from('submissions').update({ status: 'active', extra_time_until: until }).eq('id', id);
-            if (!error) { showToast("Öğrenci sınava geri döndürüldü!"); fetchStudentsAndSubs(); }
+            await _sb.from('submissions').update({ status: 'active', extra_time_until: until }).eq('id', id);
+            showToast("Süre eklendi!"); fetchStudentsAndSubs();
         };
 
         window.viewDetails = async (id) => {
             const { data: sub } = await _sb.from('submissions').select('*').eq('id', id).single();
+            if(!sub) return;
             document.getElementById('modal-student-name').innerText = sub.student_name;
+            document.getElementById('modal-exam-info').innerText = curExam.title + " ANALİZİ";
             document.getElementById('modal-answers-content').innerHTML = curExam.questions.map((q, i) => {
                 const stdAns = sub.answers[i] || '-', isCorrect = stdAns === q.correct;
                 return `<div class="p-5 rounded-3xl border-2 ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
                     <p class="text-sm font-bold text-slate-700 mb-3">${q.text || "(Görsel)"}</p>
-                    <div class="flex gap-4 font-black text-xs">
-                        <span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">ÖĞRENCİ: ${stdAns}</span>
-                        <span class="text-indigo-600">DOĞRU: ${q.correct}</span>
+                    <div class="flex gap-4 font-black text-xs uppercase">
+                        <span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">Giriş: ${stdAns}</span>
+                        <span class="text-indigo-600">Doğru: ${q.correct}</span>
                     </div>
                 </div>`;
             }).join('');
@@ -624,7 +696,7 @@
 
         window.closeModal = () => document.getElementById('details-modal').classList.replace('flex', 'hidden');
 
-        window.addStudent = async () => {
+        window.addStudent = async function() {
             const name = document.getElementById('s-name-input').value;
             const pass = Math.random().toString(36).substring(2, 7).toUpperCase();
             if(!name) return;
@@ -634,48 +706,44 @@
 
         window.publishResult = async (id) => {
             await _sb.from('submissions').update({ status: 'published' }).eq('id', id);
-            fetchStudentsAndSubs(); showToast("Yayınlandı!");
+            fetchStudentsAndSubs();
         };
 
-        // --- SINAV AKIŞI ---
+        // --- EXAM FLOW ---
         window.solveAsTeacher = (id) => {
             curExam = exams.find(e => e.id === id);
+            curStudentSession = null;
             isTeacherMode = true;
-            document.getElementById('active-title').innerText = "ÖĞRETMEN MODU (SÜRESİZ)";
+            document.getElementById('active-title').innerText = "ÖĞRETMEN ÇÖZÜM MODU";
             document.getElementById('exam-timer-box').classList.add('hidden');
-            startExam();
+            document.getElementById('finish-btn').classList.add('hidden');
+            navigate('exam');
         };
 
         window.studentLogin = async () => {
             const eid = document.getElementById('std-exam-id').value.trim().toUpperCase();
             const p = document.getElementById('std-pass').value.trim().toUpperCase();
-            if (!eid || !p) return showToast("Boş bırakmayın.");
+            if (!eid || !p) return showToast("Bilgileri girin.");
 
-            setCentralLoader(true); setProgress(40);
+            setCentralLoader(true);
             let { data: ex } = await _sb.from('exams').select('*').eq('code', eid).maybeSingle();
-            if (!ex) {
-                const uuidCheck = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-                if (uuidCheck.test(eid)) {
-                    let { data: exById } = await _sb.from('exams').select('*').eq('id', eid).maybeSingle();
-                    ex = exById;
-                }
+            if(!ex && /^[0-9a-f]{8}/.test(eid)) {
+                let { data: ex2 } = await _sb.from('exams').select('*').eq('id', eid).maybeSingle();
+                ex = ex2;
             }
-            if (!ex) { setCentralLoader(false); setProgress(100); return showToast("Kod hatalı!"); }
+            
+            if (!ex) { setCentralLoader(false); return showToast("Sınav bulunamadı!"); }
             const { data: std } = await _sb.from('students').select('*').eq('exam_id', ex.id).eq('password', p).maybeSingle();
-            if (!std) { setCentralLoader(false); setProgress(100); return showToast("Şifre hatalı!"); }
+            
+            if (!std) { setCentralLoader(false); return showToast("Şifre yanlış!"); }
 
-            curStudentSession = { std, ex }; curExam = ex;
-            setTimeout(() => { setCentralLoader(false); setProgress(100); startExam(); }, 800);
+            curStudentSession = { std, ex }; curExam = ex; isTeacherMode = false;
+            document.getElementById('active-title').innerText = ex.title;
+            document.getElementById('exam-timer-box').classList.remove('hidden');
+            document.getElementById('finish-btn').classList.remove('hidden');
+            
+            setTimeout(() => { setCentralLoader(false); navigate('exam'); startTimer(curExam.duration); }, 600);
         };
-
-        function startExam() {
-            curQIdx = 0; stdAnswers = {}; isTeacherMode = !curStudentSession;
-            navigate('exam'); renderExamQuestion(); renderOpticalForm();
-            if(!isTeacherMode) {
-                document.getElementById('exam-timer-box').classList.remove('hidden');
-                startTimer(curExam.duration);
-            }
-        }
 
         function startTimer(m) {
             let t = m * 60;
@@ -693,17 +761,19 @@
             const c = document.getElementById('q-container');
             if (!q) return;
             c.innerHTML = `
-                <div class="space-y-8 animate-in fade-in duration-500">
+                <div class="space-y-8 animate-in fadeIn duration-500">
                     <h3 class="text-4xl font-black text-indigo-700 font-mono uppercase tracking-tighter">Soru ${curQIdx + 1}</h3>
                     ${q.image ? `<div class="bg-white p-2 rounded-3xl border shadow-sm"><img src="${q.image}" class="max-h-[400px] w-full object-contain mx-auto"></div>` : ''}
-                    <div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap font-sans">${q.text || ""}</div>
+                    <div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap">${q.text || ""}</div>
                 </div>`;
             document.getElementById('q-btn-prev').disabled = curQIdx === 0;
-            document.getElementById('q-btn-next').innerText = curQIdx === curExam.questions.length - 1 ? "BİTİR" : "İLERİ";
+            document.getElementById('q-btn-next').innerText = curQIdx === curExam.questions.length - 1 ? (isTeacherMode ? "BİTİR" : "SINAVI BİTİR") : "İLERİ";
         }
 
         function renderOpticalForm() {
-            document.getElementById('opt-form').innerHTML = curExam.questions.map((q, i) => `
+            const container = document.getElementById('opt-form');
+            if (!curExam || !curExam.questions) return;
+            container.innerHTML = curExam.questions.map((q, i) => `
                 <div class="flex items-center gap-4 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50 rounded-xl px-2 transition">
                     <span class="w-6 font-black text-slate-300 text-sm font-mono">${i+1}</span>
                     <div class="flex gap-2">
@@ -712,14 +782,10 @@
                 </div>`).join('');
         }
 
-        window.setAns = (i, o) => { stdAnswers[i] = o; renderOpticalForm(); };
-        window.navQ = (d) => { if (d === 1 && curQIdx === curExam.questions.length - 1) finishExamPrompt(); else { curQIdx += d; renderExamQuestion(); } };
-        window.finishExamPrompt = () => {
-            if(isTeacherMode) return showToast("Öğretmen modundasınız, sınav bitirilemez.");
-            if (confirm("Sınavı bitirmek istiyor musunuz?")) finishExam();
-        };
-
-        window.exitExam = () => { if(confirm("Oturumdan çıkmak istediğinize emin misiniz?")) location.reload(); };
+        window.setAns = (i, o) => { if(!isTeacherMode) { stdAnswers[i] = o; renderOpticalForm(); } };
+        window.navQ = (d) => { if (d === 1 && curQIdx === curExam.questions.length - 1) { if(isTeacherMode) location.reload(); else finishExamPrompt(); } else { curQIdx += d; renderExamQuestion(); } };
+        window.finishExamPrompt = () => { if (confirm("Sınavı bitirmek istiyor musunuz?")) finishExam(); };
+        window.exitExam = () => location.reload();
 
         async function finishExam() {
             clearInterval(timerInt);
@@ -730,18 +796,12 @@
 
             const chan = _sb.channel(`sub_${sub.id}`)
                 .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'submissions', filter: `id=eq.${sub.id}` }, payload => {
-                    // Öğretmen ek süre verirse
                     if (payload.new.status === 'active') {
                         _sb.removeChannel(chan);
-                        const end = new Date(payload.new.extra_time_until);
-                        const now = new Date();
-                        const remMins = Math.floor((end - now) / 60000);
-                        curQIdx = 0;
-                        navigate('exam');
-                        startTimer(remMins > 0 ? remMins : 5);
-                        showToast("Öğretmeniniz ek süre tanımladı!");
+                        const end = new Date(payload.new.extra_time_until), now = new Date();
+                        navigate('exam'); startTimer(Math.floor((end - now) / 60000));
+                        showToast("Ek süre tanımlandı!");
                     }
-                    // Öğretmen yayınlarsa
                     if (payload.new.status === 'published') { showFinalResults(payload.new); _sb.removeChannel(chan); }
                 }).subscribe();
         }
