@@ -11,47 +11,16 @@
         .waiting-rotate { animation: spin-slow 15s linear infinite; }
         .hidden { display: none !important; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 10px; }
         .view-section { animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
         .progress-bar-fill { transition: width 0.3s ease-in-out; }
         
-        /* Whiteboard Settings */
-        #whiteboard-canvas {
-            touch-action: none;
-            cursor: crosshair;
-        }
-        .canvas-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
-        .canvas-container.active {
-            pointer-events: auto;
-        }
-
-        /* Central Loader Animation */
-        .loader-ring {
-            display: inline-block;
-            width: 80px;
-            height: 80px;
-        }
-        .loader-ring:after {
-            content: " ";
-            display: block;
-            width: 64px;
-            height: 64px;
-            margin: 8px;
-            border-radius: 50%;
-            border: 6px solid #ea580c;
-            border-color: #ea580c transparent #ea580c transparent;
-            animation: spin-slow 1.2s linear infinite;
-        }
+        #whiteboard-canvas { touch-action: none; cursor: crosshair; }
+        .canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+        .canvas-container.active { pointer-events: auto; }
+        .loader-ring { display: inline-block; width: 80px; height: 80px; }
+        .loader-ring:after { content: " "; display: block; width: 64px; height: 64px; margin: 8px; border-radius: 50%; border: 6px solid #ea580c; border-color: #ea580c transparent #ea580c transparent; animation: spin-slow 1.2s linear infinite; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen font-sans text-slate-900 overflow-x-hidden">
@@ -59,15 +28,14 @@
     <!-- Turuncu İlerleme Barı -->
     <div id="global-loader" class="fixed top-0 left-0 w-full h-1.5 z-[300] bg-orange-100 hidden">
         <div id="loader-fill" class="h-full bg-orange-600 progress-bar-fill w-0 shadow-[0_0_15px_rgba(234,88,12,0.5)]"></div>
-        <div id="loader-text" class="absolute top-3 right-4 text-[10px] font-black text-orange-700 bg-white/90 px-3 py-1 rounded-full shadow-md uppercase tracking-tighter">İŞLENİYOR %0</div>
     </div>
 
     <!-- Merkezi Yükleme Overlay -->
     <div id="central-loader" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-[250] hidden flex flex-col items-center justify-center text-white">
-        <div class="bg-white p-10 rounded-[40px] shadow-2xl flex flex-col items-center gap-6 animate-in zoom-in duration-300">
+        <div class="bg-white p-10 rounded-[40px] shadow-2xl flex flex-col items-center gap-6">
             <div class="loader-ring"></div>
             <div class="text-center">
-                <h3 class="text-slate-800 font-black text-xl uppercase tracking-tighter">Sistem İşleniyor</h3>
+                <h3 class="text-slate-800 font-black text-xl uppercase tracking-tighter">İşlem Yapılıyor</h3>
                 <p class="text-slate-400 font-bold text-xs mt-1 uppercase tracking-widest">Lütfen Bekleyiniz...</p>
             </div>
         </div>
@@ -75,8 +43,8 @@
 
     <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-8 py-4 rounded-2xl shadow-2xl hidden z-[400] font-bold text-sm"></div>
 
-    <!-- Üst Navigasyon -->
-    <nav class="bg-indigo-700 text-white p-4 shadow-xl sticky top-0 z-50">
+    <!-- Üst Navigasyon (Öğrenci linkiyle gelirse gizlenir) -->
+    <nav id="main-nav" class="bg-indigo-700 text-white p-4 shadow-xl sticky top-0 z-50 transition-all duration-500">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('portal')">
                 <div class="bg-white text-indigo-700 w-10 h-10 rounded-xl flex items-center justify-center font-black text-xl shadow-inner border border-white/20">M</div>
@@ -84,7 +52,7 @@
             </div>
             <div class="flex items-center gap-4">
                 <button onclick="navigate('portal')" class="text-sm font-bold opacity-80 hover:opacity-100 transition px-2 font-black uppercase">Ana Sayfa</button>
-                <button id="teacher-nav-btn" onclick="navigate('teacher-login')" class="bg-white/20 hover:bg-white/30 px-5 py-2 rounded-xl text-sm font-black transition flex items-center gap-2 uppercase tracking-tighter shadow-sm">
+                <button id="teacher-nav-btn" onclick="handleNavToPanel()" class="bg-white/20 hover:bg-white/30 px-5 py-2 rounded-xl text-sm font-black transition flex items-center gap-2 uppercase tracking-tighter shadow-sm">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                     Panel
                 </button>
@@ -92,7 +60,7 @@
         </div>
     </nav>
 
-    <!-- 1. PORTAL EKRANI -->
+    <!-- 1. PORTAL -->
     <section id="portal-section" class="view-section max-w-4xl mx-auto mt-20 px-4 text-center">
         <div class="bg-white p-16 rounded-[50px] shadow-2xl border border-slate-100">
             <h2 class="text-7xl font-black text-slate-900 mb-6 tracking-tighter uppercase">MATOTA</h2>
@@ -101,23 +69,26 @@
         </div>
     </section>
 
-    <!-- 2. ÖĞRETMEN GİRİŞ EKRANI -->
+    <!-- 2. ÖĞRETMEN GİRİŞİ -->
     <section id="teacher-login-section" class="view-section hidden max-w-md mx-auto mt-24 px-4 text-center">
         <div class="bg-white p-10 rounded-[40px] shadow-2xl border border-slate-100">
-            <h2 class="text-3xl font-black mb-8 text-slate-800 tracking-tight">Yönetici Girişi</h2>
+            <h2 class="text-3xl font-black mb-8 text-slate-800 tracking-tight uppercase">Yönetici Girişi</h2>
             <div class="space-y-5 text-left">
                 <input type="email" id="t-email" placeholder="E-Posta" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-indigo-500 font-bold transition text-sm">
                 <input type="password" id="t-pass" placeholder="Şifre" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl outline-none focus:border-indigo-500 font-bold transition text-sm">
-                <button onclick="handleTeacherAuth()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black hover:bg-black transition shadow-lg uppercase tracking-widest">GİRİŞ YAP</button>
+                <button onclick="handleTeacherAuth()" class="w-full bg-slate-900 text-white py-5 rounded-2xl font-black hover:bg-black transition shadow-lg uppercase tracking-widest">Panel'e Gir</button>
             </div>
         </div>
     </section>
 
-    <!-- 3. ÖĞRETMEN PANELİ -->
+    <!-- 3. DASHBOARD -->
     <section id="teacher-dashboard-section" class="view-section hidden max-w-6xl mx-auto mt-12 px-4 pb-20">
         <div class="flex justify-between items-end mb-10">
-            <h2 class="text-5xl font-black text-slate-900 tracking-tighter uppercase">Sınavlarım</h2>
-            <button onclick="logout()" class="text-red-500 font-black text-sm hover:underline uppercase tracking-tighter">Oturumu Kapat</button>
+            <div class="text-left">
+                <h2 class="text-5xl font-black text-slate-900 tracking-tighter uppercase">Sınavlarım</h2>
+                <p class="text-indigo-600 font-bold text-xs uppercase tracking-widest mt-2">Oturum Açık: Ali Bey</p>
+            </div>
+            <button onclick="logout()" class="text-red-500 font-black text-sm hover:underline uppercase tracking-tighter bg-red-50 px-4 py-2 rounded-xl">Oturumu Kapat</button>
         </div>
         
         <div class="grid lg:grid-cols-3 gap-10">
@@ -129,9 +100,9 @@
                     </h3>
                     <div class="space-y-4">
                         <input type="text" id="new-exam-name" placeholder="Sınav Adı" class="w-full p-4 border rounded-2xl outline-none font-bold text-sm bg-slate-50 focus:bg-white transition">
-                        <input type="text" id="new-exam-code" placeholder="Sınav Kodu (Örn: MAT01)" class="w-full p-4 border rounded-2xl outline-none font-bold uppercase text-sm bg-slate-50 focus:bg-white transition">
+                        <input type="text" id="new-exam-code" placeholder="Sınav Kodu (Örn: TYT01)" class="w-full p-4 border rounded-2xl outline-none font-bold uppercase text-sm bg-slate-50 focus:bg-white transition">
                         <input type="number" id="new-exam-time" placeholder="Süre (Dakika)" class="w-full p-4 border rounded-2xl outline-none font-bold text-sm bg-slate-50 focus:bg-white transition">
-                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg transition uppercase">OLUŞTUR</button>
+                        <button onclick="createNewExam()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 shadow-lg transition uppercase">Sınavı Kaydet</button>
                     </div>
                 </div>
             </div>
@@ -139,16 +110,16 @@
         </div>
     </section>
 
-    <!-- 4. SINAV DÜZENLEME PANELİ -->
+    <!-- 4. SINAV DÜZENLEME -->
     <section id="manage-exam-section" class="view-section hidden max-w-7xl mx-auto mt-12 px-4 pb-32">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
             <div class="flex items-center gap-6">
                 <button onclick="navigate('teacher-dashboard')" class="bg-white w-14 h-14 rounded-2xl shadow-md text-slate-400 hover:text-indigo-600 transition flex items-center justify-center">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </button>
-                <div>
-                    <h2 id="m-exam-title" class="text-4xl font-black text-slate-900 tracking-tighter uppercase text-left">Sınav Düzenle</h2>
-                    <p id="m-exam-code-display" class="text-sm font-bold text-indigo-600 mt-1 uppercase tracking-widest font-mono text-left">KOD: ---</p>
+                <div class="text-left">
+                    <h2 id="m-exam-title" class="text-4xl font-black text-slate-900 tracking-tighter uppercase">Sınav Düzenle</h2>
+                    <p id="m-exam-code-display" class="text-sm font-bold text-indigo-600 mt-1 uppercase tracking-widest font-mono">KOD: ---</p>
                 </div>
             </div>
             <button onclick="copyShareLink()" class="bg-indigo-50 text-indigo-600 px-8 py-4 rounded-2xl font-black text-sm flex items-center gap-3 hover:bg-indigo-100 transition shadow-sm border border-indigo-100">
@@ -158,11 +129,12 @@
         </div>
 
         <div class="grid lg:grid-cols-12 gap-10">
+            <!-- Sol: Soru Paneli -->
             <div class="lg:col-span-7 space-y-8">
                 <div class="bg-white p-8 rounded-[40px] shadow-xl border border-slate-50 h-fit">
                     <h3 id="q-editor-title" class="text-xl font-black mb-6 text-indigo-600 flex items-center gap-2">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        Soru Ekle
+                        Soru Ekle / Düzenle
                     </h3>
                     <div class="bg-slate-50 p-6 rounded-3xl border-2 border-dashed border-slate-200 space-y-4">
                         <textarea id="q-input" oninput="updateLivePreview()" placeholder="Soru metni..." class="w-full p-5 border rounded-2xl h-32 outline-none font-medium focus:bg-white transition text-sm"></textarea>
@@ -181,14 +153,14 @@
                         <div id="live-preview" class="p-5 bg-white rounded-2xl border hidden shadow-inner">
                             <p class="text-[10px] font-black text-indigo-400 uppercase mb-2 tracking-tighter">Canlı Önizleme</p>
                             <div id="preview-img-container" class="mb-3 text-center"></div>
-                            <p id="preview-text" class="text-sm font-medium whitespace-pre-wrap text-left"></p>
+                            <p id="preview-text" class="text-sm font-medium whitespace-pre-wrap text-left uppercase"></p>
                         </div>
                         <div class="flex gap-2">
                             <button id="save-q-btn" onclick="saveQuestion()" class="flex-1 bg-indigo-600 text-white py-5 rounded-2xl font-black shadow-lg hover:bg-indigo-700 transition flex items-center justify-center gap-2 uppercase tracking-tighter">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                                 KAYDET
                             </button>
-                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-200 text-slate-600 rounded-2xl font-bold hidden uppercase tracking-tighter text-sm">İptal</button>
+                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-200 text-slate-600 rounded-2xl font-bold hidden uppercase text-sm">İptal</button>
                         </div>
                     </div>
                     <div id="q-list" class="mt-8 space-y-4 max-h-[600px] overflow-y-auto pr-2 custom-scrollbar"></div>
@@ -264,7 +236,6 @@
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
                 <span id="active-title" class="font-black text-sm uppercase tracking-widest">OTURUM AÇIK</span>
-                <!-- Tam Ekran Butonu -->
                 <button onclick="toggleFullScreen()" class="bg-white/10 p-2 rounded-xl hover:bg-white/20 flex items-center justify-center ml-2" title="Tam Ekran">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
@@ -278,13 +249,12 @@
         <div class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-10">
             <div class="lg:col-span-8 space-y-6">
                 <div id="q-area" class="relative bg-slate-50 rounded-[45px] shadow-inner border border-slate-100 min-h-[500px] overflow-hidden">
-                    <div id="q-container" class="p-12 relative z-0"></div>
+                    <div id="q-container" class="p-12 relative z-0 text-left"></div>
                     <div id="canvas-container" class="canvas-container">
                         <canvas id="whiteboard-canvas"></canvas>
                     </div>
                 </div>
 
-                <!-- Tahta Kontrol Paneli -->
                 <div class="bg-white p-4 rounded-3xl shadow-lg border border-indigo-50 flex items-center justify-between">
                     <div class="flex items-center gap-3">
                         <button onclick="setTool('pen')" id="tool-pen" class="bg-indigo-600 text-white p-3 rounded-2xl shadow-md tool-btn flex items-center justify-center transition">
@@ -294,7 +264,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                         <button onclick="clearCanvas(true)" class="bg-red-50 text-red-500 p-3 rounded-2xl hover:bg-red-100 flex items-center justify-center transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                         <div class="h-8 w-px bg-slate-200 mx-2"></div>
                         <button onclick="toggleWhiteboard()" id="btn-toggle-wb" class="text-[10px] font-black uppercase tracking-widest px-4 py-2 bg-slate-900 text-white rounded-xl transition">Kalemi Aç</button>
@@ -306,7 +276,6 @@
                 </div>
             </div>
 
-            <!-- Optik Panel -->
             <div class="lg:col-span-4">
                 <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-indigo-50 sticky top-32 h-fit max-h-[75vh] flex flex-col">
                     <h3 class="font-black mb-6 pb-4 border-b text-indigo-600 uppercase tracking-tighter">Optik Form</h3>
@@ -322,20 +291,20 @@
         <div class="bg-white p-16 rounded-[60px] shadow-2xl relative overflow-hidden border border-indigo-50 text-center">
             <div class="absolute inset-0 bg-indigo-600/5 waiting-rotate rounded-full -m-20"></div>
             <div class="relative z-10 text-center">
-                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg shadow-indigo-100"></div>
+                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg"></div>
                 <h2 class="text-4xl font-black text-slate-800 mb-6 uppercase tracking-tight">Sınav Bitti</h2>
-                <p class="text-xl text-indigo-500 font-bold italic mb-2">"Öğretmeninizin Sonucunuzu Yayınlaması Bekleniyor..."</p>
+                <p class="text-xl text-indigo-500 font-bold italic mb-2 tracking-tight">"Öğretmeninizin Sonucunuzu Yayınlaması Bekleniyor..."</p>
             </div>
         </div>
     </section>
 
-    <!-- SONUÇ PANELİ (KARNE) -->
+    <!-- SONUÇ PANELİ -->
     <section id="result-section" class="view-section hidden max-w-2xl mx-auto mt-16 px-4 pb-20 text-center">
         <div class="bg-white p-12 rounded-[50px] shadow-2xl border relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-indigo-500 to-green-500"></div>
             <h2 class="text-5xl font-black text-center mb-12 tracking-tighter uppercase text-indigo-700">Deneme Karnesi</h2>
             <div id="res-content" class="space-y-4 text-left"></div>
-            <button onclick="location.reload()" class="w-full mt-12 bg-slate-900 text-white py-6 rounded-3xl font-black shadow-xl">ANA SAYFA</button>
+            <button onclick="location.reload()" class="w-full mt-12 bg-slate-900 text-white py-6 rounded-3xl font-black shadow-xl uppercase">ANA SAYFA</button>
         </div>
     </section>
 
@@ -346,9 +315,9 @@
 
         let exams = [], curExam = null, curStudentSession = null, stdAnswers = {}, curQIdx = 0, timerInt = null, tempImg = null;
         let isEditMode = false, editingQIdx = -1, isTeacherMode = false;
-        let questionDrawings = {}; // Çizimleri tutacak hafıza
+        let questionDrawings = {}; 
 
-        // --- TAHTA (WHITEBOARD) ---
+        // --- TAHTA ---
         let canvas, ctx, drawing = false, tool = 'pen', wbActive = false;
 
         function setupWhiteboard() {
@@ -358,9 +327,7 @@
             const container = document.getElementById('q-area');
             canvas.width = container.offsetWidth;
             canvas.height = container.offsetHeight;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
-            ctx.lineWidth = 3;
+            ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = 3;
 
             const getPos = (e) => {
                 const rect = canvas.getBoundingClientRect();
@@ -369,116 +336,64 @@
                 return { x, y };
             };
 
-            const startDraw = (e) => {
-                if(!wbActive) return;
-                drawing = true;
-                const pos = getPos(e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-            };
-
-            const draw = (e) => {
-                if(!drawing || !wbActive) return;
-                e.preventDefault();
-                const pos = getPos(e);
-                ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over';
-                ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : '#4f46e5';
-                ctx.lineWidth = tool === 'eraser' ? 30 : 3;
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
-            };
-
+            const startDraw = (e) => { if(!wbActive) return; drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
+            const draw = (e) => { if(!drawing || !wbActive) return; e.preventDefault(); const pos = getPos(e); ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'; ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : '#4f46e5'; ctx.lineWidth = tool === 'eraser' ? 30 : 3; ctx.lineTo(pos.x, pos.y); ctx.stroke(); };
             const stopDraw = () => { drawing = false; ctx.closePath(); };
 
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDraw);
-            canvas.addEventListener('touchstart', startDraw);
-            canvas.addEventListener('touchmove', draw);
-            canvas.addEventListener('touchend', stopDraw);
+            canvas.addEventListener('mousedown', startDraw); canvas.addEventListener('mousemove', draw); canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('touchstart', startDraw); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', stopDraw);
         }
 
         window.toggleWhiteboard = () => {
             wbActive = !wbActive;
-            const container = document.getElementById('canvas-container');
             const btn = document.getElementById('btn-toggle-wb');
-            if(wbActive) {
-                container.classList.add('active');
-                btn.innerText = "Kalemi Kapat";
-                btn.classList.replace('bg-slate-900', 'bg-orange-600');
-            } else {
-                container.classList.remove('active');
-                btn.innerText = "Kalemi Aç";
-                btn.classList.replace('bg-orange-600', 'bg-slate-900');
-            }
+            document.getElementById('canvas-container').classList.toggle('active', wbActive);
+            btn.innerText = wbActive ? "Kalemi Kapat" : "Kalemi Aç";
+            btn.classList.toggle('bg-orange-600', wbActive);
+            btn.classList.toggle('bg-slate-900', !wbActive);
         };
 
         window.setTool = (t) => {
             tool = t;
-            document.querySelectorAll('.tool-btn').forEach(b => {
-                b.classList.remove('bg-indigo-600', 'text-white');
-                b.classList.add('bg-slate-100', 'text-slate-500');
-            });
+            document.querySelectorAll('.tool-btn').forEach(b => { b.classList.remove('bg-indigo-600', 'text-white'); b.classList.add('bg-slate-100', 'text-slate-500'); });
             const active = document.getElementById(`tool-${t}`);
-            active.classList.replace('bg-slate-100', 'bg-indigo-600');
-            active.classList.replace('text-slate-500', 'text-white');
+            active.classList.replace('bg-slate-100', 'bg-indigo-600'); active.classList.replace('text-slate-500', 'text-white');
         };
 
-        window.clearCanvas = (permanent = false) => {
-            if(!ctx) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if(permanent) delete questionDrawings[curQIdx];
-        };
+        window.clearCanvas = (perm = false) => { if(!ctx) return; ctx.clearRect(0, 0, canvas.width, canvas.height); if(perm) delete questionDrawings[curQIdx]; };
 
-        // --- TAM EKRAN ---
         window.toggleFullScreen = () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    showToast("Tam ekran yapılamadı!");
-                });
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
-            }
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+            else if (document.exitFullscreen) document.exitFullscreen();
         };
-
-        // --- UI ---
-        function setProgress(percent) {
-            const bar = document.getElementById('global-loader');
-            const fill = document.getElementById('loader-fill');
-            const text = document.getElementById('loader-text');
-            if (percent >= 100) {
-                fill.style.width = '100%'; text.innerText = 'TAMAMLANDI %100';
-                setTimeout(() => bar.classList.add('hidden'), 800);
-            } else {
-                bar.classList.remove('hidden'); fill.style.width = percent + '%';
-                text.innerText = 'İŞLENİYOR %' + Math.round(percent);
-            }
-        }
-
-        function setCentralLoader(v) {
-            document.getElementById('central-loader').classList.toggle('hidden', !v);
-        }
 
         // --- CORE ---
+        function setProgress(percent) {
+            const fill = document.getElementById('loader-fill');
+            const bar = document.getElementById('global-loader');
+            if (percent >= 100) { fill.style.width = '100%'; setTimeout(() => bar.classList.add('hidden'), 800); }
+            else { bar.classList.remove('hidden'); fill.style.width = percent + '%'; }
+        }
+
         function init() {
             if (window.supabase) {
                 _sb = window.supabase.createClient(SB_URL, SB_KEY);
                 const session = JSON.parse(localStorage.getItem('matota_auth') || '{}');
                 const view = window.location.hash.replace('#', '') || 'portal';
-                if (session.isTeacher) navigate('teacher-dashboard');
-                else navigate(view);
-                handleUrlParams();
+                
+                // Link kontrolü: ?exam varsa menüyü gizle
+                const eid = new URLSearchParams(window.location.search).get('exam');
+                if (eid) {
+                    document.getElementById('main-nav').classList.add('hidden');
+                    navigate('student-login');
+                    document.getElementById('std-exam-id').value = decodeURIComponent(eid).trim().toUpperCase();
+                } else if (session.isTeacher) {
+                    document.getElementById('teacher-nav-btn').innerText = "Panele Git";
+                    navigate(view === 'portal' ? 'teacher-dashboard' : view);
+                } else {
+                    navigate(view);
+                }
             } else setTimeout(init, 100);
-        }
-
-        function handleUrlParams() {
-            const eid = new URLSearchParams(window.location.search).get('exam');
-            if (eid) {
-                navigate('student-login');
-                document.getElementById('std-exam-id').value = decodeURIComponent(eid).trim().toUpperCase();
-            }
         }
 
         window.navigate = function(view) {
@@ -487,25 +402,27 @@
             if (target) target.classList.remove('hidden');
             window.location.hash = view;
             if (view === 'teacher-dashboard') fetchAllExams();
-            if (view === 'exam') {
-                setTimeout(setupWhiteboard, 300);
-                renderOpticalForm();
-            }
+            if (view === 'exam') { setTimeout(setupWhiteboard, 300); renderOpticalForm(); }
             window.scrollTo(0,0);
         };
 
-        // --- TEACHER ACTIONS ---
-        window.handleTeacherAuth = function() {
-            const e = document.getElementById('t-email').value;
-            const p = document.getElementById('t-pass').value;
-            if (e === 'alisengulidu@gmail.com' && p === '352477Ali') {
-                localStorage.setItem('matota_auth', JSON.stringify({ isTeacher: true }));
-                navigate('teacher-dashboard');
-                document.getElementById('teacher-nav-btn').innerHTML = `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Panelim`;
-            } else showToast("Hatalı Giriş Bilgileri!");
+        window.handleNavToPanel = () => {
+            const session = JSON.parse(localStorage.getItem('matota_auth') || '{}');
+            if (session.isTeacher) navigate('teacher-dashboard');
+            else navigate('teacher-login');
         };
 
-        window.logout = () => { localStorage.clear(); location.reload(); };
+        // --- TEACHER ---
+        window.handleTeacherAuth = function() {
+            const e = document.getElementById('t-email').value, p = document.getElementById('t-pass').value;
+            if (e === 'alisengulidu@gmail.com' && p === '352477Ali') {
+                localStorage.setItem('matota_auth', JSON.stringify({ isTeacher: true }));
+                document.getElementById('teacher-nav-btn').innerText = "Panele Git";
+                navigate('teacher-dashboard');
+            } else showToast("Hatalı Giriş!");
+        };
+
+        window.logout = () => { localStorage.clear(); location.href = location.pathname; };
 
         async function fetchAllExams() {
             try {
@@ -519,128 +436,69 @@
         function renderExamsList() {
             document.getElementById('exams-container').innerHTML = exams.map(ex => `
                 <div class="bg-white p-7 rounded-3xl shadow-sm border border-slate-100 flex justify-between items-center hover:shadow-xl transition-all group">
-                    <div class="text-left">
-                        <h4 class="font-black text-xl text-slate-800 tracking-tight group-hover:text-indigo-600 transition-colors uppercase">${ex.title}</h4>
-                        <p class="text-[10px] text-slate-400 font-black uppercase mt-1 tracking-widest font-mono">
-                            KOD: <span class="text-indigo-600">${ex.code || ex.id.substring(0,8)}</span> | ${ex.questions?.length || 0} SORU
-                        </p>
-                    </div>
+                    <div class="text-left"><h4 class="font-black text-xl text-slate-800 uppercase tracking-tight">${ex.title}</h4>
+                    <p class="text-[10px] text-slate-400 font-black uppercase mt-1 font-mono">KOD: <span class="text-indigo-600">${ex.code || ex.id.substring(0,8)}</span> | ${ex.questions?.length || 0} SORU</p></div>
                     <div class="flex gap-2">
-                        <button onclick="solveAsTeacher('${ex.id}')" class="bg-orange-50 text-orange-600 px-6 py-3 rounded-2xl font-black text-xs hover:bg-orange-600 hover:text-white transition shadow-sm uppercase tracking-tighter">ÇÖZ</button>
-                        <button onclick="openExamManager('${ex.id}')" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black text-sm hover:bg-indigo-600 transition shadow-lg uppercase">Yönet</button>
+                        <button onclick="solveAsTeacher('${ex.id}')" class="bg-orange-50 text-orange-600 px-6 py-3 rounded-2xl font-black text-xs hover:bg-orange-600 hover:text-white transition uppercase">Çöz</button>
+                        <button onclick="openExamManager('${ex.id}')" class="bg-slate-900 text-white px-8 py-3 rounded-2xl font-black text-sm hover:bg-indigo-600 transition uppercase">Yönet</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
         }
 
         window.createNewExam = async function() {
-            const title = document.getElementById('new-exam-name').value;
-            const code = document.getElementById('new-exam-code').value.trim().toUpperCase();
-            const time = document.getElementById('new-exam-time').value;
-            if (!title || !time || !code) return showToast("Boş alan bırakmayın.");
+            const t = document.getElementById('new-exam-name').value, c = document.getElementById('new-exam-code').value.trim().toUpperCase(), d = document.getElementById('new-exam-time').value;
+            if (!t || !c || !d) return showToast("Boş bırakmayın.");
             setProgress(50);
-            const { error } = await _sb.from('exams').insert([{ title, code, duration: parseInt(time), questions: [] }]);
+            const { error } = await _sb.from('exams').insert([{ title: t, code: c, duration: parseInt(d), questions: [] }]);
             setProgress(100);
-            if (error) return showToast("Bu kod kullanılıyor olabilir!");
-            fetchAllExams();
-            showToast("Sınav oluşturuldu.");
+            if (!error) { fetchAllExams(); showToast("Eklendi."); } else showToast("Kod kullanımda!");
         };
 
         window.openExamManager = (id) => {
             curExam = exams.find(e => e.id === id);
             if(!curExam) return;
-            const session = JSON.parse(localStorage.getItem('matota_auth') || '{}');
-            localStorage.setItem('matota_auth', JSON.stringify({ ...session, curExamId: id }));
             document.getElementById('m-exam-title').innerText = curExam.title;
             document.getElementById('m-exam-code-display').innerText = "KOD: " + (curExam.code || curExam.id.substring(0,8));
-            resetQuestionEditor();
-            navigate('manage-exam');
-            renderQuestionsInManager();
-            fetchStudentsAndSubs();
+            resetQuestionEditor(); navigate('manage-exam'); renderQuestionsInManager(); fetchStudentsAndSubs();
         };
 
         window.copyShareLink = () => {
             const c = curExam.code || curExam.id;
-            navigator.clipboard.writeText(window.location.origin + window.location.pathname + '?exam=' + encodeURIComponent(c));
+            const link = window.location.origin + window.location.pathname + '?exam=' + encodeURIComponent(c);
+            const el = document.createElement('textarea'); el.value = link; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
             showToast("Bağlantı kopyalandı!");
         };
 
-        // --- SORU EDİTÖRÜ ---
-        window.handleImagePreview = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => { tempImg = ev.target.result; updateLivePreview(); };
-            reader.readAsDataURL(file);
-        };
-
-        window.updateLivePreview = () => {
-            const text = document.getElementById('q-input').value;
-            const prev = document.getElementById('live-preview');
-            if (text || tempImg) {
-                prev.classList.remove('hidden');
-                document.getElementById('preview-text').innerText = text;
-                document.getElementById('preview-img-container').innerHTML = tempImg ? `<img src="${tempImg}" class="max-h-40 rounded-xl mx-auto border shadow-sm">` : '';
-            } else prev.classList.add('hidden');
-        };
-
+        // --- SORU ---
+        window.handleImagePreview = (e) => { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = (ev) => { tempImg = ev.target.result; updateLivePreview(); }; r.readAsDataURL(f); };
+        window.updateLivePreview = () => { const t = document.getElementById('q-input').value, p = document.getElementById('live-preview'); if(t || tempImg) { p.classList.remove('hidden'); document.getElementById('preview-text').innerText = t; document.getElementById('preview-img-container').innerHTML = tempImg ? `<img src="${tempImg}" class="max-h-40 rounded-xl mx-auto border shadow-sm">` : ''; } else p.classList.add('hidden'); };
         window.saveQuestion = async () => {
-            const text = document.getElementById('q-input').value, ans = document.getElementById('q-ans').value;
-            if (!text && !tempImg) return;
-            setProgress(30);
-            let updatedQs = [...(curExam.questions || [])];
-            if (isEditMode) updatedQs[editingQIdx] = { text, correct: ans, image: tempImg };
-            else updatedQs.push({ text, correct: ans, image: tempImg });
-            await _sb.from('exams').update({ questions: updatedQs }).eq('id', curExam.id);
-            curExam.questions = updatedQs;
-            setProgress(100); resetQuestionEditor(); renderQuestionsInManager(); showToast("Kaydedildi.");
+            const t = document.getElementById('q-input').value, a = document.getElementById('q-ans').value; if(!t && !tempImg) return;
+            setProgress(30); let updated = [...(curExam.questions || [])];
+            if(isEditMode) updated[editingQIdx] = { text: t, correct: a, image: tempImg };
+            else updated.push({ text: t, correct: a, image: tempImg });
+            await _sb.from('exams').update({ questions: updated }).eq('id', curExam.id);
+            curExam.questions = updated; setProgress(100); resetQuestionEditor(); renderQuestionsInManager(); showToast("Kaydedildi.");
         };
 
         window.editQuestion = (idx) => {
-            isEditMode = true; editingQIdx = idx;
-            const q = curExam.questions[idx];
-            document.getElementById('q-input').value = q.text || "";
-            document.getElementById('q-ans').value = q.correct;
-            tempImg = q.image; updateLivePreview();
-            document.getElementById('q-editor-title').innerText = "Soru Düzenle";
-            document.getElementById('save-q-btn').innerText = "GÜNCELLE";
-            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            isEditMode = true; editingQIdx = idx; const q = curExam.questions[idx];
+            document.getElementById('q-input').value = q.text || ""; document.getElementById('q-ans').value = q.correct; tempImg = q.image; updateLivePreview();
+            document.getElementById('q-editor-title').innerText = "Soru Düzenle"; document.getElementById('save-q-btn').innerText = "GÜNCELLE"; document.getElementById('cancel-edit-btn').classList.remove('hidden');
         };
 
-        window.resetQuestionEditor = () => {
-            isEditMode = false; tempImg = null;
-            document.getElementById('q-input').value = '';
-            document.getElementById('img-btn-text').innerText = "Görsel Seç";
-            document.getElementById('q-editor-title').innerText = "Yeni Soru Ekle";
-            document.getElementById('save-q-btn').innerText = "SORUYU KAYDET";
-            document.getElementById('cancel-edit-btn').classList.add('hidden');
-            updateLivePreview();
-        };
+        window.resetQuestionEditor = () => { isEditMode = false; tempImg = null; document.getElementById('q-input').value = ''; document.getElementById('img-btn-text').innerText = "Görsel Seç"; document.getElementById('q-editor-title').innerText = "Yeni Soru Ekle"; document.getElementById('save-q-btn').innerText = "KAYDET"; document.getElementById('cancel-edit-btn').classList.add('hidden'); updateLivePreview(); };
 
         function renderQuestionsInManager() {
             document.getElementById('q-list').innerHTML = (curExam.questions || []).map((q, i) => `
-                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 flex justify-between items-center transition group">
-                    <div class="overflow-hidden flex-1 text-left">
-                        <span class="text-[10px] font-black text-indigo-500 uppercase font-mono">Soru ${i+1}</span>
-                        <p class="text-sm font-bold truncate text-slate-700 uppercase">${q.text || "(Görsel Soru)"}</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="editQuestion(${i})" class="text-indigo-500 p-2 hover:bg-white rounded-xl shadow-sm transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                        <button onclick="deleteQuestion(${i})" class="text-red-400 p-2 hover:bg-white rounded-xl shadow-sm transition">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
-                    </div>
+                <div class="bg-slate-50 p-5 rounded-2xl border flex justify-between items-center transition group">
+                    <div class="overflow-hidden flex-1 text-left"><span class="text-[10px] font-black text-indigo-500 uppercase">Soru ${i+1}</span><p class="text-sm font-bold truncate text-slate-700 uppercase">${q.text || "(Görsel)"}</p></div>
+                    <div class="flex gap-2"><button onclick="editQuestion(${i})" class="text-indigo-500 p-2 hover:bg-white rounded-xl shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2"/></svg></button>
+                    <button onclick="deleteQuestion(${i})" class="text-red-400 p-2 hover:bg-white rounded-xl shadow-sm"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg></button></div>
                 </div>`).join('');
         }
 
-        window.deleteQuestion = async (idx) => {
-            if(!confirm("Soru silinsin mi?")) return;
-            curExam.questions.splice(idx, 1);
-            await _sb.from('exams').update({ questions: curExam.questions }).eq('id', curExam.id);
-            renderQuestionsInManager();
-        };
+        window.deleteQuestion = async (idx) => { if(confirm("Sil?")) { curExam.questions.splice(idx, 1); await _sb.from('exams').update({ questions: curExam.questions }).eq('id', curExam.id); renderQuestionsInManager(); } };
 
         // --- STUDENT MGMT ---
         async function fetchStudentsAndSubs() {
@@ -648,154 +506,57 @@
             const { data: subs } = await _sb.from('submissions').select('*').eq('exam_id', curExam.id);
 
             document.getElementById('s-list').innerHTML = (stds || []).map(s => `
-                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border border-slate-100">
-                    <div class="flex flex-col text-left">
-                        <span class="font-bold text-sm text-slate-700 uppercase tracking-tighter">${s.name}</span>
-                        <span class="font-mono text-[9px] bg-yellow-100 px-2 rounded-lg font-black text-yellow-800 uppercase mt-1 w-fit">${s.password}</span>
-                    </div>
-                    <button onclick="deleteStudent('${s.id}')" class="text-red-400 p-2 hover:bg-red-50 rounded-xl transition">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </button>
+                <div class="flex justify-between items-center bg-slate-50 p-4 rounded-2xl border text-left">
+                    <div class="flex flex-col"><span class="font-bold text-sm text-slate-700 uppercase">${s.name}</span><span class="font-mono text-[9px] bg-yellow-100 px-2 rounded-lg font-black text-yellow-800 uppercase mt-1 w-fit">${s.password}</span></div>
+                    <button onclick="deleteStudent('${s.id}')" class="text-red-400 p-2 hover:bg-red-50 rounded-xl transition"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" stroke-width="2"/></svg></button>
                 </div>`).join('');
 
-            const subList = document.getElementById('sub-list');
-            if (!subs || subs.length === 0) subList.innerHTML = `<p class="text-[10px] text-slate-500 text-center py-6 font-bold uppercase opacity-50 tracking-widest">Yanıt yok</p>`;
-            else subList.innerHTML = subs.map(sub => `
-                <div class="p-4 rounded-2xl border ${sub.status === 'published' ? 'border-green-500/40 bg-green-500/10' : 'bg-white/10 border-white/20'} flex justify-between items-center">
-                    <div class="cursor-pointer flex-1 text-left" onclick="viewDetails('${sub.id}')">
-                        <p class="font-black text-sm text-white uppercase">${sub.student_name}</p>
-                        <p class="text-[9px] opacity-60 font-bold text-white tracking-tighter uppercase">Analiz</p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="giveExtraTime('${sub.id}')" class="bg-orange-600 text-white p-2 rounded-xl shadow-lg hover:bg-orange-700 transition" title="Süreyi Aç">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3" stroke-linecap="round"/></svg>
-                        </button>
-                        ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black">YAYINLA</button>` : `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`}
-                    </div>
+            document.getElementById('sub-list').innerHTML = (subs || []).map(sub => `
+                <div class="p-4 rounded-2xl border ${sub.status === 'published' ? 'border-green-500/40 bg-green-500/10' : 'bg-white/10'} flex justify-between items-center">
+                    <div class="cursor-pointer flex-1 text-left" onclick="viewDetails('${sub.id}')"><p class="font-black text-sm text-white uppercase">${sub.student_name}</p><p class="text-[9px] opacity-60 font-bold text-white tracking-tighter">İncele</p></div>
+                    <div class="flex gap-2"><button onclick="giveExtraTime('${sub.id}')" class="bg-orange-600 text-white p-2 rounded-xl shadow-lg hover:bg-orange-700 transition"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3" stroke-linecap="round"/></svg></button>
+                    ${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-black uppercase">Yayınla</button>` : `<svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2"/></svg>`}</div>
                 </div>`).join('');
         }
 
-        window.deleteStudent = async function(id) {
-            if (!confirm("Öğrenci silinsin mi?")) return;
-            await _sb.from('students').delete().eq('id', id);
-            fetchStudentsAndSubs();
-        };
-
-        window.giveExtraTime = async (id) => {
-            const mins = prompt("Kaç dakika eklensin?", "10");
-            if (!mins) return;
-            const until = new Date(Date.now() + parseInt(mins) * 60000).toISOString();
-            await _sb.from('submissions').update({ status: 'active', extra_time_until: until }).eq('id', id);
-            showToast("Süre eklendi!"); fetchStudentsAndSubs();
-        };
-
+        window.deleteStudent = async (id) => { if(confirm("Öğrenciyi sil?")) { await _sb.from('students').delete().eq('id', id); fetchStudentsAndSubs(); } };
+        window.giveExtraTime = async (id) => { const m = prompt("Kaç dakika eklensin?", "10"); if(!m) return; await _sb.from('submissions').update({ status: 'active', extra_time_until: new Date(Date.now()+m*60000).toISOString() }).eq('id', id); showToast("Süre eklendi!"); fetchStudentsAndSubs(); };
         window.viewDetails = async (id) => {
-            const { data: sub } = await _sb.from('submissions').select('*').eq('id', id).single();
-            if(!sub) return;
+            const { data: sub } = await _sb.from('submissions').select('*').eq('id', id).single(); if(!sub) return;
             document.getElementById('modal-student-name').innerText = sub.student_name;
-            document.getElementById('modal-exam-info').innerText = curExam.title + " ANALİZİ";
-            document.getElementById('modal-answers-content').innerHTML = curExam.questions.map((q, i) => {
-                const stdAns = sub.answers[i] || '-', isCorrect = stdAns === q.correct;
-                return `<div class="p-5 rounded-3xl border-2 ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'}">
-                    <p class="text-sm font-bold text-slate-700 mb-3 text-left uppercase font-mono tracking-tight">${q.text || "(Görsel Soru)"}</p>
-                    <div class="flex gap-4 font-black text-xs uppercase font-mono">
-                        <span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">Giriş: ${stdAns}</span>
-                        <span class="text-indigo-600">Doğru: ${q.correct}</span>
-                    </div>
-                </div>`;
-            }).join('');
+            document.getElementById('modal-answers-content').innerHTML = curExam.questions.map((q, i) => { const stdAns = sub.answers[i] || '-', isCorrect = stdAns === q.correct; return `<div class="p-5 rounded-3xl border-2 ${isCorrect ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} text-left"><p class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-tight">${q.text || "(Görsel)"}</p><div class="flex gap-4 font-black text-xs uppercase"><span class="${isCorrect ? 'text-green-600' : 'text-red-600'}">Giriş: ${stdAns}</span><span class="text-indigo-600">Doğru: ${q.correct}</span></div></div>`; }).join('');
             document.getElementById('details-modal').classList.replace('hidden', 'flex');
         };
-
         window.closeModal = () => document.getElementById('details-modal').classList.replace('flex', 'hidden');
+        window.addStudent = async () => { const n = document.getElementById('s-name-input').value, p = Math.random().toString(36).substring(2, 7).toUpperCase(); if(!n) return; await _sb.from('students').insert([{ exam_id: curExam.id, name: n, password: p }]); document.getElementById('s-name-input').value = ''; fetchStudentsAndSubs(); };
+        window.publishResult = async (id) => { await _sb.from('submissions').update({ status: 'published' }).eq('id', id); fetchStudentsAndSubs(); };
 
-        window.addStudent = async function() {
-            const name = document.getElementById('s-name-input').value;
-            const pass = Math.random().toString(36).substring(2, 7).toUpperCase();
-            if(!name) return;
-            await _sb.from('students').insert([{ exam_id: curExam.id, name, password: pass }]);
-            document.getElementById('s-name-input').value = ''; fetchStudentsAndSubs();
-        };
-
-        window.publishResult = async (id) => {
-            await _sb.from('submissions').update({ status: 'published' }).eq('id', id);
-            fetchStudentsAndSubs();
-        };
-
-        // --- EXAM FLOW ---
-        window.solveAsTeacher = (id) => {
-            curExam = exams.find(e => e.id === id);
-            curStudentSession = null;
-            isTeacherMode = true;
-            document.getElementById('active-title').innerText = "ÖĞRETMEN ÇÖZÜM MODU";
-            document.getElementById('exam-timer-box').classList.add('hidden');
-            document.getElementById('finish-btn').classList.add('hidden');
-            questionDrawings = {};
-            navigate('exam');
-        };
-
+        // --- SINAV AKIŞI ---
+        window.solveAsTeacher = (id) => { curExam = exams.find(e => e.id === id); isTeacherMode = true; document.getElementById('active-title').innerText = "ÖĞRETMEN MODU"; document.getElementById('exam-timer-box').classList.add('hidden'); document.getElementById('finish-btn').classList.add('hidden'); questionDrawings = {}; navigate('exam'); };
         window.studentLogin = async () => {
-            const eid = document.getElementById('std-exam-id').value.trim().toUpperCase();
-            const p = document.getElementById('std-pass').value.trim().toUpperCase();
-            if (!eid || !p) return showToast("Bilgileri girin.");
-
-            setCentralLoader(true);
+            const eid = document.getElementById('std-exam-id').value.trim().toUpperCase(), p = document.getElementById('std-pass').value.trim().toUpperCase(); if (!eid || !p) return showToast("Bilgileri girin.");
+            document.getElementById('central-loader').classList.remove('hidden'); setProgress(40);
             let { data: ex } = await _sb.from('exams').select('*').eq('code', eid).maybeSingle();
-            if(!ex && /^[0-9a-f]{8}/.test(eid)) {
-                let { data: ex2 } = await _sb.from('exams').select('*').eq('id', eid).maybeSingle();
-                ex = ex2;
-            }
-            
-            if (!ex) { setCentralLoader(false); return showToast("Sınav bulunamadı!"); }
+            if(!ex && /^[0-9a-f]{8}/.test(eid)) { let { data: ex2 } = await _sb.from('exams').select('*').eq('id', eid).maybeSingle(); ex = ex2; }
+            if (!ex) { document.getElementById('central-loader').classList.add('hidden'); return showToast("Sınav bulunamadı!"); }
             const { data: std } = await _sb.from('students').select('*').eq('exam_id', ex.id).eq('password', p).maybeSingle();
-            
-            if (!std) { setCentralLoader(false); return showToast("Şifre yanlış!"); }
-
-            curStudentSession = { std, ex }; curExam = ex; isTeacherMode = false;
-            document.getElementById('active-title').innerText = ex.title;
-            document.getElementById('exam-timer-box').classList.remove('hidden');
-            document.getElementById('finish-btn').classList.remove('hidden');
-            questionDrawings = {};
-            
-            setTimeout(() => { setCentralLoader(false); navigate('exam'); startTimer(curExam.duration); }, 600);
+            if (!std) { document.getElementById('central-loader').classList.add('hidden'); return showToast("Şifre yanlış!"); }
+            curStudentSession = { std, ex }; curExam = ex; isTeacherMode = false; document.getElementById('active-title').innerText = ex.title;
+            setTimeout(() => { document.getElementById('central-loader').classList.add('hidden'); setProgress(100); navigate('exam'); startTimer(curExam.duration); }, 600);
         };
 
-        function startTimer(m) {
-            let t = m * 60;
-            if (timerInt) clearInterval(timerInt);
-            timerInt = setInterval(() => {
-                let mm = Math.floor(t / 60), ss = t % 60;
-                document.getElementById('exam-timer').innerText = `${mm}:${ss < 10 ? '0'+ss : ss}`;
-                if (--t < 0) { clearInterval(timerInt); finishExam(); }
-            }, 1000);
-        }
+        function startTimer(m) { let t = m * 60; if (timerInt) clearInterval(timerInt); timerInt = setInterval(() => { let mm = Math.floor(t / 60), ss = t % 60; document.getElementById('exam-timer').innerText = `${mm}:${ss < 10 ? '0'+ss : ss}`; if (--t < 0) { clearInterval(timerInt); finishExam(); } }, 1000); }
 
         function renderExamQuestion() {
-            clearCanvas();
-            const q = curExam.questions[curQIdx];
-            const c = document.getElementById('q-container');
-            if (!q) return;
-            c.innerHTML = `
-                <div class="space-y-8 animate-in fadeIn duration-500 text-left">
-                    <h3 class="text-4xl font-black text-indigo-700 font-mono uppercase tracking-tighter">Soru ${curQIdx + 1}</h3>
-                    ${q.image ? `<div class="bg-white p-2 rounded-3xl border shadow-sm"><img src="${q.image}" class="max-h-[400px] w-full object-contain mx-auto"></div>` : ''}
-                    <div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap font-mono uppercase tracking-tight">${q.text || ""}</div>
-                </div>`;
-            
-            if (questionDrawings[curQIdx]) {
-                const img = new Image();
-                img.onload = () => ctx.drawImage(img, 0, 0);
-                img.src = questionDrawings[curQIdx];
-            }
-
+            clearCanvas(); const q = curExam.questions[curQIdx]; const c = document.getElementById('q-container'); if (!q) return;
+            c.innerHTML = `<div class="space-y-8 animate-in fadeIn duration-500 text-left"><h3 class="text-4xl font-black text-indigo-700 font-mono uppercase tracking-tighter">Soru ${curQIdx + 1}</h3>${q.image ? `<div class="bg-white p-2 rounded-3xl border shadow-sm"><img src="${q.image}" class="max-h-[400px] w-full object-contain mx-auto"></div>` : ''}<div class="text-2xl font-medium leading-relaxed text-slate-800 whitespace-pre-wrap font-mono uppercase tracking-tight">${q.text || ""}</div></div>`;
+            if (questionDrawings[curQIdx]) { const img = new Image(); img.onload = () => ctx.drawImage(img, 0, 0); img.src = questionDrawings[curQIdx]; }
             document.getElementById('q-btn-prev').disabled = curQIdx === 0;
             document.getElementById('q-btn-next').innerText = curQIdx === curExam.questions.length - 1 ? (isTeacherMode ? "BİTİR" : "SINAVI BİTİR") : "İLERİ";
         }
 
         function renderOpticalForm() {
-            const container = document.getElementById('opt-form');
-            if (!curExam || !curExam.questions) return;
-            container.innerHTML = curExam.questions.map((q, i) => `
+            document.getElementById('opt-form').innerHTML = curExam.questions.map((q, i) => `
                 <div class="flex items-center gap-4 py-3 border-b border-slate-50 last:border-0 hover:bg-slate-50 rounded-xl px-2 transition">
                     <span class="w-6 font-black text-slate-300 text-sm font-mono">${i+1}</span>
                     <div class="flex gap-2">
@@ -804,62 +565,42 @@
                 </div>`).join('');
         }
 
-        window.setAns = (i, o) => { if(!isTeacherMode) { stdAnswers[i] = o; renderOpticalForm(); } };
+        window.setAns = (i, o) => { 
+            if(isTeacherMode) return;
+            if(stdAnswers[i] === o) delete stdAnswers[i]; // Boş bırakma desteği
+            else stdAnswers[i] = o;
+            renderOpticalForm();
+        };
 
         window.navQ = (d) => { 
             if (canvas) questionDrawings[curQIdx] = canvas.toDataURL();
-
-            if (d === 1 && curQIdx === curExam.questions.length - 1) { 
-                if(isTeacherMode) location.reload(); 
-                else finishExamPrompt(); 
-            } else { 
-                curQIdx += d; 
-                renderExamQuestion(); 
-            } 
+            if (d === 1 && curQIdx === curExam.questions.length - 1) { if(isTeacherMode) location.reload(); else finishExamPrompt(); } else { curQIdx += d; renderExamQuestion(); } 
         };
 
         window.finishExamPrompt = () => { if (confirm("Sınavı bitirmek istiyor musunuz?")) finishExam(); };
         window.exitExam = () => { if(confirm("Çıkmak istiyor musunuz?")) location.reload(); };
 
         async function finishExam() {
-            clearInterval(timerInt);
-            navigate('wait');
-            const { data: sub } = await _sb.from('submissions').insert([{
-                exam_id: curExam.id, student_id: curStudentSession.std.id, student_name: curStudentSession.std.name, answers: stdAnswers, status: 'pending'
-            }]).select().single();
-
-            const chan = _sb.channel(`sub_${sub.id}`)
-                .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'submissions', filter: `id=eq.${sub.id}` }, payload => {
-                    if (payload.new.status === 'active') {
-                        _sb.removeChannel(chan);
-                        const end = new Date(payload.new.extra_time_until), now = new Date();
-                        navigate('exam'); startTimer(Math.floor((end - now) / 60000));
-                        showToast("Ek süre tanımlandı!");
-                    }
-                    if (payload.new.status === 'published') { showFinalResults(payload.new); _sb.removeChannel(chan); }
-                }).subscribe();
+            clearInterval(timerInt); navigate('wait');
+            const { data: sub } = await _sb.from('submissions').insert([{ exam_id: curExam.id, student_id: curStudentSession.std.id, student_name: curStudentSession.std.name, answers: stdAnswers, status: 'pending' }]).select().single();
+            const chan = _sb.channel(`sub_${sub.id}`).on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'submissions', filter: `id=eq.${sub.id}` }, payload => {
+                if (payload.new.status === 'active') { _sb.removeChannel(chan); const end = new Date(payload.new.extra_time_until), now = new Date(); navigate('exam'); startTimer(Math.floor((end - now) / 60000)); showToast("Ek süre tanımlandı!"); }
+                if (payload.new.status === 'published') { showFinalResults(payload.new); _sb.removeChannel(chan); }
+            }).subscribe();
         }
 
         function showFinalResults(sub) {
-            navigate('result');
-            let c = 0; curExam.questions.forEach((q, i) => { if (sub.answers[i] === q.correct) c++; });
+            navigate('result'); let c = 0; curExam.questions.forEach((q, i) => { if (sub.answers[i] === q.correct) c++; });
             const s = Math.round((c / curExam.questions.length) * 100);
             document.getElementById('res-content').innerHTML = `
                 <div class="text-center mb-10"><div class="inline-block p-10 bg-indigo-50 rounded-full border-4 border-indigo-600 shadow-xl mb-4 font-black text-7xl text-indigo-700">%${s}</div></div>
                 <div class="space-y-3">
                     ${curExam.questions.map((q, i) => `
-                        <div class="flex justify-between p-5 rounded-3xl border-2 ${sub.answers[i] === q.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} transition-all hover:scale-[1.01]">
-                            <span class="font-bold font-mono">Soru ${i+1}</span>
-                            <span class="font-black text-xs uppercase text-mono">Sen: ${sub.answers[i] || '-'} | Doğru: ${q.correct}</span>
-                        </div>`).join('')}
+                        <div class="flex justify-between p-5 rounded-3xl border-2 ${sub.answers[i] === q.correct ? 'bg-green-50 border-green-200' : 'bg-red-50 border-red-200'} transition-all hover:scale-[1.01]"><span class="font-bold font-mono">Soru ${i+1}</span><span class="font-black text-xs uppercase text-mono">Sen: ${sub.answers[i] || '-'} | Doğru: ${q.correct}</span></div>`).join('')}
                 </div>`;
         }
 
-        window.showToast = (m) => {
-            const t = document.getElementById('toast'); t.innerText = m; t.classList.remove('hidden');
-            setTimeout(() => t.classList.add('hidden'), 3500);
-        };
-
+        window.showToast = (m) => { const t = document.getElementById('toast'); t.innerText = m; t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 3500); };
         window.onload = init;
     </script>
 </body>
