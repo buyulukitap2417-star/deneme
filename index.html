@@ -39,7 +39,7 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.4); border-radius: 10px; }
         
-        #whiteboard-canvas { touch-action: none; cursor: crosshair; display: block; }
+        #whiteboard-canvas { touch-action: none; cursor: crosshair; display: block; background: transparent; }
         .canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
         .canvas-container.active { pointer-events: auto; }
 
@@ -62,6 +62,9 @@
 
         .loader-ring { display: inline-block; width: 60px; height: 60px; border: 5px solid #f3f4f6; border-radius: 50%; border-top: 5px solid #ea580c; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .blink-red { animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     </style>
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 min-h-screen custom-scrollbar">
@@ -82,11 +85,11 @@
     </div>
 
     <!-- Toast -->
-    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 glass px-8 py-4 rounded-2xl shadow-2xl hidden z-[400] font-bold text-xs border border-brand-light/20"></div>
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 glass px-8 py-4 rounded-2xl shadow-xl hidden z-[400] font-bold text-xs border border-brand-light/20"></div>
 
     <!-- Navigasyon -->
-    <nav id="main-nav" class="glass sticky top-0 mx-auto w-full z-50 border-b border-white/20">
-        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <nav id="main-nav" class="glass sticky top-0 mx-auto w-full z-50 border-b border-white/20 flex flex-row">
+        <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center w-full">
             <div class="flex items-center gap-3 cursor-pointer group" onclick="navigate('portal')">
                 <div class="bg-brand-light text-white w-9 h-9 rounded-lg flex items-center justify-center font-black text-lg">M</div>
                 <h1 class="text-lg font-black tracking-tighter uppercase hidden sm:block">MATOTA</h1>
@@ -97,17 +100,17 @@
                     <svg id="theme-icon-light" class="w-5 h-5 hidden dark:block text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path></svg>
                     <svg id="theme-icon-dark" class="w-5 h-5 block dark:hidden text-brand-light" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                 </button>
-                <button id="teacher-nav-btn" onclick="handleNavToPanel()" class="bg-brand-light text-white px-5 py-2 rounded-xl text-xs font-bold transition-all hover:bg-brand-dark uppercase tracking-widest">Panel</button>
+                <button id="teacher-nav-btn" onclick="handleNavToPanel()" class="bg-brand-light text-white px-5 py-2 rounded-xl text-xs font-bold transition-all hover:bg-brand-dark uppercase tracking-widest shadow-md">Panel</button>
             </div>
         </div>
     </nav>
 
     <!-- PORTAL -->
-    <section id="portal-section" class="view-section max-w-4xl mx-auto mt-20 px-6 text-center text-left">
-        <div class="glass p-12 rounded-[40px] shadow-2xl border-white/30 text-left text-left text-center text-center">
-            <h2 class="text-6xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter uppercase text-center text-center">MATOTA</h2>
-            <p class="text-slate-500 dark:text-slate-400 mb-10 text-lg font-medium tracking-tight text-center text-center text-center">Ölçme ve Değerlendirmede Yeni Standart</p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4 text-center">
+    <section id="portal-section" class="view-section max-w-4xl mx-auto mt-20 px-6 text-center">
+        <div class="glass p-12 rounded-[40px] shadow-2xl border-white/30">
+            <h2 class="text-6xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter uppercase">MATOTA</h2>
+            <p class="text-slate-500 dark:text-slate-400 mb-10 text-lg font-medium tracking-tight">Ölçme ve Değerlendirmede Yeni Standart</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
                 <button onclick="navigate('student-login')" class="bg-brand-light text-white px-10 py-4 rounded-2xl font-black text-lg shadow-xl uppercase transition-transform hover:-translate-y-1">Sınava Katıl</button>
                 <button onclick="navigate('teacher-login')" class="glass dark:bg-slate-800/40 text-slate-700 dark:text-white px-8 py-4 rounded-2xl font-bold text-lg border border-slate-200 dark:border-slate-800 transition-transform hover:-translate-y-1 uppercase">Yönetim</button>
             </div>
@@ -115,56 +118,56 @@
     </section>
 
     <!-- ÖĞRETMEN GİRİŞİ -->
-    <section id="teacher-login-section" class="view-section hidden max-w-sm mx-auto mt-20 px-6 text-center text-center text-left">
-        <div class="glass p-10 rounded-[35px] shadow-xl text-center text-center text-left">
-            <h2 class="text-2xl font-black mb-8 uppercase tracking-tight text-left text-left text-center text-center text-center">Yönetici Girişi</h2>
-            <div class="space-y-4 text-left text-left text-center text-center text-center">
-                <input type="email" id="t-email" placeholder="E-Posta" class="w-full p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold transition text-sm text-left">
-                <input type="password" id="t-pass" placeholder="Şifre" class="w-full p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold transition text-sm text-left text-left">
-                <button onclick="handleTeacherAuth()" class="w-full bg-brand-light text-white py-4 rounded-2xl font-black shadow-lg uppercase tracking-widest mt-2 hover:bg-brand-dark transition-all text-center">Giriş Yap</button>
+    <section id="teacher-login-section" class="view-section hidden max-w-sm mx-auto mt-20 px-6">
+        <div class="glass p-10 rounded-[35px] shadow-xl text-center">
+            <h2 class="text-2xl font-black mb-8 uppercase tracking-tight">Yönetici Girişi</h2>
+            <div class="space-y-4 text-left">
+                <input type="email" id="t-email" placeholder="E-Posta" class="w-full p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold transition text-sm">
+                <input type="password" id="t-pass" placeholder="Şifre" class="w-full p-4 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold transition text-sm text-left">
+                <button onclick="handleTeacherAuth()" class="w-full bg-brand-light text-white py-4 rounded-2xl font-black shadow-lg uppercase tracking-widest mt-2 hover:bg-brand-dark transition-all">Giriş Yap</button>
             </div>
         </div>
     </section>
 
     <!-- DASHBOARD -->
-    <section id="teacher-dashboard-section" class="view-section hidden max-w-6xl mx-auto mt-10 px-6 pb-20 text-left text-left">
+    <section id="teacher-dashboard-section" class="view-section hidden max-w-6xl mx-auto mt-10 px-6 pb-20">
         <div class="flex justify-between items-center mb-10 text-left">
-            <div class="text-left text-left text-left">
-                <h2 class="text-3xl font-black uppercase tracking-tight text-left">Sınavlarım</h2>
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1 text-left">Hoş Geldiniz, Ali Bey</p>
+            <div>
+                <h2 class="text-3xl font-black uppercase tracking-tight">Sınavlarım</h2>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Hoş Geldiniz, Ali Bey</p>
             </div>
             <button onclick="logout()" class="text-red-500 font-bold text-[10px] uppercase bg-red-50 dark:bg-red-950/20 px-4 py-2 rounded-lg border border-red-100 dark:border-red-900/20 hover:bg-red-500 hover:text-white transition-all text-center">Güvenli Çıkış</button>
         </div>
         
-        <div class="grid lg:grid-cols-12 gap-8 text-left text-left">
-            <div class="lg:col-span-4 text-left text-left">
-                <div class="glass p-8 rounded-[30px] shadow-lg sticky top-24 border-white/40 text-left text-left">
-                    <h3 class="font-black text-brand-light text-xs uppercase mb-6 tracking-widest flex items-center gap-2 text-left">
+        <div class="grid lg:grid-cols-12 gap-8 text-left">
+            <div class="lg:col-span-4">
+                <div class="glass p-8 rounded-[30px] shadow-lg sticky top-24 border-white/40">
+                    <h3 class="font-black text-brand-light text-xs uppercase mb-6 tracking-widest flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2" stroke-linecap="round"/></svg>
                         Yeni Sınav
                     </h3>
-                    <div class="space-y-4 text-left text-left">
-                        <input type="text" id="new-exam-name" placeholder="Sınav Başlığı" class="w-full p-4 bg-white/30 dark:bg-slate-900/30 border border-transparent focus:border-brand-light rounded-2xl outline-none font-bold transition text-xs shadow-inner text-left text-left text-left">
-                        <input type="text" id="new-exam-code" placeholder="Kısa Kod" class="w-full p-4 bg-white/30 dark:bg-slate-900/30 border border-transparent focus:border-brand-light rounded-2xl outline-none font-bold uppercase transition text-xs shadow-inner text-left text-left text-left text-left">
-                        <input type="number" id="new-exam-time" placeholder="Süre (DK)" class="w-full p-4 bg-white/30 dark:bg-slate-900/30 border border-transparent focus:border-brand-light rounded-2xl outline-none font-bold transition text-xs shadow-inner text-left text-left text-left">
-                        <button onclick="createNewExam()" class="w-full bg-brand-light text-white py-4 rounded-2xl font-black shadow-md uppercase text-xs hover:bg-brand-dark transition-all text-center">Kaydet</button>
+                    <div class="space-y-4">
+                        <input type="text" id="new-exam-name" placeholder="Sınav Başlığı" class="w-full p-4 bg-white/30 dark:bg-slate-900/30 border border-transparent focus:border-brand-light rounded-2xl outline-none font-bold transition text-xs shadow-inner">
+                        <input type="text" id="new-exam-code" placeholder="Kısa Kod" class="w-full p-4 bg-white/30 dark:bg-slate-900/30 border border-transparent focus:border-brand-light rounded-2xl outline-none font-bold uppercase transition text-xs shadow-inner">
+                        <input type="number" id="new-exam-time" placeholder="Süre (DK)" class="w-full p-4 bg-white/30 dark:bg-slate-900/30 border border-transparent focus:border-brand-light rounded-2xl outline-none font-bold transition text-xs shadow-inner">
+                        <button onclick="createNewExam()" class="w-full bg-brand-light text-white py-4 rounded-2xl font-black shadow-md uppercase text-xs hover:bg-brand-dark transition-all">Kaydet</button>
                     </div>
                 </div>
             </div>
-            <div class="lg:col-span-8 space-y-4 text-left" id="exams-container"></div>
+            <div class="lg:col-span-8 space-y-4" id="exams-container"></div>
         </div>
     </section>
 
     <!-- SINAV DÜZENLEME -->
-    <section id="manage-exam-section" class="view-section hidden max-w-6xl mx-auto mt-8 px-6 pb-32 text-left text-left text-left text-left">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 text-left text-left text-left text-left">
-            <div class="flex items-center gap-4 text-left text-left text-left text-left">
-                <button onclick="navigate('teacher-dashboard')" class="glass bg-white dark:bg-slate-900 w-11 h-11 rounded-xl shadow-md flex items-center justify-center text-brand-light border-white/50 hover:bg-brand-light hover:text-white transition-all text-left text-left text-center text-left text-left text-left text-left text-center">
+    <section id="manage-exam-section" class="view-section hidden max-w-6xl mx-auto mt-8 px-6 pb-32">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 text-left">
+            <div class="flex items-center gap-4 text-left">
+                <button onclick="navigate('teacher-dashboard')" class="glass bg-white dark:bg-slate-900 w-11 h-11 rounded-xl shadow-md flex items-center justify-center text-brand-light border-white/50 hover:bg-brand-light hover:text-white transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 </button>
-                <div class="text-left text-left text-left text-left text-left">
-                    <h2 id="m-exam-title" class="text-2xl font-black text-slate-900 dark:text-white uppercase leading-none text-left">Düzenle</h2>
-                    <p id="m-exam-code-display" class="text-[9px] font-black text-brand-light mt-1.5 uppercase font-mono bg-brand-light/10 px-3 py-1 rounded-full w-fit text-left text-left text-left text-left">KOD: ---</p>
+                <div>
+                    <h2 id="m-exam-title" class="text-2xl font-black text-slate-900 dark:text-white uppercase leading-none">Düzenle</h2>
+                    <p id="m-exam-code-display" class="text-[9px] font-black text-brand-light mt-1.5 uppercase font-mono bg-brand-light/10 px-3 py-1 rounded-full w-fit">KOD: ---</p>
                 </div>
             </div>
             <button onclick="copyShareLink()" class="bg-brand-orange text-white px-6 py-3 rounded-2xl font-black text-[10px] flex items-center gap-3 shadow-lg uppercase tracking-widest hover:scale-105 transition-all text-center">
@@ -173,171 +176,168 @@
             </button>
         </div>
 
-        <div class="grid lg:grid-cols-12 gap-8 text-left text-left text-left text-left text-left">
-            <div class="lg:col-span-7 space-y-6 text-left text-left text-left text-left text-left text-left">
-                <div class="glass p-8 rounded-[35px] shadow-xl border-white/20 h-fit text-left text-left text-left text-left text-left">
-                    <h3 id="q-editor-title" class="text-lg font-black mb-6 text-brand-light flex items-center gap-3 uppercase text-left text-left text-left text-left">Soru Ekle</h3>
-                    <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-[25px] border border-slate-200 dark:border-slate-800 space-y-4 text-left text-left text-left text-left text-left">
-                        <textarea id="q-input" oninput="updateLivePreview()" placeholder="Soru metni..." class="w-full p-4 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-brand-light rounded-2xl h-24 outline-none font-semibold transition text-sm shadow-sm text-left text-left text-left text-left"></textarea>
-                        <div class="grid grid-cols-2 gap-4 text-left text-left text-left text-left text-left text-left">
-                            <select id="q-ans" class="p-3 bg-white dark:bg-slate-800 rounded-xl font-bold text-sm outline-none border border-slate-100 dark:border-slate-700 shadow-sm text-left text-left text-left text-left">
+        <div class="grid lg:grid-cols-12 gap-8 text-left">
+            <div class="lg:col-span-7 space-y-6">
+                <div class="glass p-8 rounded-[35px] shadow-xl border-white/20 h-fit">
+                    <h3 id="q-editor-title" class="text-lg font-black mb-6 text-brand-light flex items-center gap-3 uppercase text-left">Soru Ekle</h3>
+                    <div class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-[25px] border border-slate-200 dark:border-slate-800 space-y-4">
+                        <textarea id="q-input" oninput="updateLivePreview()" placeholder="Soru metni..." class="w-full p-4 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-brand-light rounded-2xl h-24 outline-none font-semibold transition text-sm shadow-sm text-left"></textarea>
+                        <div class="grid grid-cols-2 gap-4">
+                            <select id="q-ans" class="p-3 bg-white dark:bg-slate-800 rounded-xl font-bold text-sm outline-none border border-slate-100 dark:border-slate-700 shadow-sm text-left">
                                 <option value="A">Doğru: A</option><option value="B">Doğru: B</option>
                                 <option value="C">Doğru: C</option><option value="D">Doğru: D</option>
                                 <option value="E">Doğru: E</option>
                             </select>
-                            <label class="p-3 bg-white dark:bg-slate-800 rounded-xl cursor-pointer flex items-center justify-center gap-2 font-bold text-[10px] text-slate-500 hover:text-brand-light transition shadow-sm border border-slate-100 dark:border-slate-700 uppercase text-left text-left text-left">
+                            <label class="p-3 bg-white dark:bg-slate-800 rounded-xl cursor-pointer flex items-center justify-center gap-2 font-bold text-[10px] text-slate-500 hover:text-brand-light transition shadow-sm border border-slate-100 dark:border-slate-700 uppercase">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-width="2" stroke-linecap="round"/></svg>
                                 <span>Resim</span>
-                                <input type="file" id="q-img-file" onchange="handleImagePreview(event)" accept="image/*" class="hidden text-left text-left text-left text-left">
+                                <input type="file" id="q-img-file" onchange="handleImagePreview(event)" accept="image/*" class="hidden">
                             </label>
                         </div>
-                        <div id="live-preview" class="p-5 bg-white dark:bg-slate-800 rounded-2xl hidden shadow-md animate-in fade-in duration-300 text-left text-left text-left text-left">
-                            <div id="preview-img-container" class="mb-3 text-center rounded-xl overflow-hidden text-left text-left text-left text-left"></div>
-                            <p id="preview-text" class="text-xs font-bold whitespace-pre-wrap text-slate-600 dark:text-slate-400 text-left text-left text-left text-left text-left"></p>
+                        <div id="live-preview" class="p-5 bg-white dark:bg-slate-800 rounded-2xl hidden shadow-md animate-in fade-in duration-300">
+                            <div id="preview-img-container" class="mb-3 text-center rounded-xl overflow-hidden"></div>
+                            <p id="preview-text" class="text-xs font-bold whitespace-pre-wrap text-slate-600 dark:text-slate-400"></p>
                         </div>
-                        <div class="flex gap-3 text-left text-left text-left text-left text-left">
-                            <button id="save-q-btn" onclick="saveQuestion()" class="flex-1 bg-brand-light text-white py-4 rounded-2xl font-black shadow-lg uppercase tracking-widest text-xs hover:bg-brand-dark transition-all text-center text-center text-center">Soru Kaydet</button>
-                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl font-bold hidden uppercase text-[10px] text-center text-center text-center text-center">İptal</button>
+                        <div class="flex gap-3">
+                            <button id="save-q-btn" onclick="saveQuestion()" class="flex-1 bg-brand-light text-white py-4 rounded-2xl font-black shadow-lg uppercase tracking-widest text-xs hover:bg-brand-dark transition-all text-center">Soru Kaydet</button>
+                            <button id="cancel-edit-btn" onclick="resetQuestionEditor()" class="px-6 bg-slate-100 dark:bg-slate-800 text-slate-500 rounded-2xl font-bold hidden uppercase text-[10px]">İptal</button>
                         </div>
                     </div>
-                    <div id="q-list" class="mt-8 space-y-2.5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar text-left text-left text-left text-left text-left"></div>
+                    <div id="q-list" class="mt-8 space-y-2.5 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar text-left"></div>
                 </div>
             </div>
 
             <!-- Sağ: Liste -->
-            <div class="lg:col-span-5 space-y-8 text-left text-left text-left text-left text-left">
-                <div class="glass p-8 rounded-[35px] shadow-lg border-white/20 text-left text-left text-left text-left">
-                    <h3 class="text-lg font-black mb-6 text-green-600 flex items-center gap-3 uppercase text-left text-left text-left text-left">Öğrenciler</h3>
-                    <div class="flex gap-2 mb-6 text-left text-left text-left text-left text-left">
-                        <input type="text" id="s-name-input" placeholder="Ad Soyad" class="flex-1 p-3.5 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 focus:border-green-500 rounded-xl outline-none font-bold text-sm shadow-inner transition text-left text-left text-left text-left">
-                        <button onclick="addStudent()" class="btn-hover bg-green-600 text-white px-5 rounded-xl flex items-center justify-center shadow-lg hover:bg-green-700 transition text-left text-left text-center text-left text-left text-left">
+            <div class="lg:col-span-5 space-y-8">
+                <div class="glass p-8 rounded-[35px] shadow-lg border-white/20">
+                    <h3 class="text-lg font-black mb-6 text-green-600 flex items-center gap-3 uppercase">Öğrenciler</h3>
+                    <div class="flex gap-2 mb-6">
+                        <input type="text" id="s-name-input" placeholder="Ad Soyad" class="flex-1 p-3.5 bg-white/40 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 focus:border-green-500 rounded-xl outline-none font-bold text-sm shadow-inner transition text-left">
+                        <button onclick="addStudent()" class="btn-hover bg-green-600 text-white px-5 rounded-xl flex items-center justify-center shadow-lg hover:bg-green-700 transition">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="3" stroke-linecap="round"/></svg>
                         </button>
                     </div>
-                    <div id="s-list" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-2 text-left text-left text-left text-left text-left"></div>
+                    <div id="s-list" class="space-y-2 max-h-48 overflow-y-auto custom-scrollbar pr-2"></div>
                 </div>
 
-                <div class="glass dark:bg-slate-900/60 p-8 rounded-[35px] shadow-xl text-white border-white/10 text-left text-left text-left text-left">
-                    <h3 class="text-lg font-black mb-6 text-brand-light uppercase text-left text-left text-left text-left text-left">Gelen Yanıtlar</h3>
-                    <div id="sub-list" class="space-y-3 text-left text-left text-left text-left text-left"></div>
+                <div class="glass dark:bg-slate-900/60 p-8 rounded-[35px] shadow-xl text-white border-white/10">
+                    <h3 class="text-lg font-black mb-6 text-brand-light uppercase">Gelen Yanıtlar</h3>
+                    <div id="sub-list" class="space-y-3"></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- MODAL -->
+    <!-- ANALİZ MODALI -->
     <div id="details-modal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-md z-[100] hidden items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-3xl shadow-2xl max-h-[85vh] flex flex-col border border-white/10 text-left text-left text-left">
-            <div class="p-6 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-950/50 rounded-t-3xl text-left text-left text-left text-left text-left">
-                <div class="text-left uppercase font-black tracking-tight text-slate-800 dark:text-white text-left text-left text-left" id="modal-student-name">Analiz</div>
-                <button onclick="closeModal()" class="bg-white dark:bg-slate-800 p-2 rounded-xl shadow-lg hover:text-red-500 transition border dark:border-slate-700 flex items-center justify-center text-left text-left text-center text-left text-left text-left">
+        <div class="bg-white dark:bg-slate-900 w-full max-w-xl rounded-3xl shadow-2xl max-h-[85vh] flex flex-col border border-white/10 text-left">
+            <div class="p-6 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-950/50 rounded-t-3xl">
+                <div class="text-left uppercase font-black tracking-tight text-slate-800 dark:text-white" id="modal-student-name">Analiz</div>
+                <button onclick="closeModal()" class="bg-white dark:bg-slate-800 p-2 rounded-xl shadow-lg hover:text-red-500 transition border dark:border-slate-700 flex items-center justify-center">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="2.5" stroke-linecap="round"/></svg>
                 </button>
             </div>
-            <div id="modal-answers-content" class="p-8 overflow-y-auto custom-scrollbar flex-1 space-y-4 text-left text-left text-left text-left text-left"></div>
+            <div id="modal-answers-content" class="p-8 overflow-y-auto custom-scrollbar flex-1 space-y-4 text-left"></div>
         </div>
     </div>
 
     <!-- ÖĞRENCİ GİRİŞİ -->
-    <section id="student-login-section" class="view-section hidden max-w-sm mx-auto mt-16 px-6 text-center text-center text-center">
-        <div class="glass p-10 rounded-[40px] shadow-2xl border-white/30 text-center text-center text-center text-center">
-            <h2 class="text-3xl font-black mb-8 tracking-tighter uppercase text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">Sınava Katıl</h2>
-            <div class="space-y-4 text-left text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">
-                <input type="text" id="std-exam-id" placeholder="SINAV KODU" class="w-full p-4 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold text-center uppercase tracking-widest transition shadow-inner text-left text-left text-center text-left text-left text-center text-left text-left text-center text-center">
-                <input type="password" id="std-pass" placeholder="ÖZEL ŞİFRE" class="w-full p-4 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold text-center transition tracking-widest shadow-inner text-left text-left text-center text-left text-left text-center text-left text-left text-center text-center text-center">
-                <button onclick="studentLogin()" class="w-full bg-brand-light text-white py-5 rounded-2xl font-black text-base shadow-lg uppercase tracking-widest mt-4 hover:scale-[1.02] transition-all text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">Başlat</button>
+    <section id="student-login-section" class="view-section hidden max-w-sm mx-auto mt-16 px-6 text-center">
+        <div class="glass p-10 rounded-[40px] shadow-2xl border-white/30">
+            <h2 class="text-3xl font-black mb-8 tracking-tighter uppercase">Sınava Katıl</h2>
+            <div class="space-y-4 text-left text-center">
+                <input type="text" id="std-exam-id" placeholder="SINAV KODU" class="w-full p-4 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold text-center uppercase tracking-widest transition shadow-inner">
+                <input type="password" id="std-pass" placeholder="ÖZEL ŞİFRE" class="w-full p-4 bg-white/50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-2xl outline-none focus:border-brand-light font-bold text-center transition tracking-widest shadow-inner">
+                <button onclick="studentLogin()" class="w-full bg-brand-light text-white py-5 rounded-2xl font-black text-base shadow-lg uppercase tracking-widest mt-4 hover:scale-[1.02] transition-all">Başlat</button>
             </div>
         </div>
     </section>
 
     <!-- SINAV EKRANI -->
-    <section id="exam-section" class="view-section hidden min-h-screen bg-white dark:bg-slate-950 transition-colors duration-500 text-left text-left text-left text-left">
-        <header class="glass sticky top-2 mx-2 md:mx-4 rounded-2xl p-4 flex justify-between items-center z-[100] shadow-xl border-white/50 mt-2 text-left text-left text-left">
-            <div class="flex items-center gap-3 text-left text-left text-left text-left">
-                <button onclick="exitExam()" class="bg-red-500/10 text-red-500 p-2.5 rounded-xl hover:bg-red-500 hover:text-white transition-all text-left text-left text-center text-left text-left text-left">
+    <section id="exam-section" class="view-section hidden min-h-screen bg-white dark:bg-slate-950 transition-colors duration-500 text-left">
+        <header class="glass sticky top-2 mx-2 md:mx-4 rounded-2xl p-4 flex justify-between items-center z-[100] shadow-xl border-white/50 mt-2">
+            <div class="flex items-center gap-3">
+                <button onclick="exitExam()" class="bg-red-500/10 text-red-500 p-2.5 rounded-xl hover:bg-red-500 hover:text-white transition-all flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-width="2.5" stroke-linecap="round"/></svg>
                 </button>
-                <div class="text-left text-left text-left text-left text-left text-left text-left"><span id="active-title" class="font-black text-[10px] uppercase tracking-widest text-brand-light block mb-0.5 text-left text-left text-left text-left text-left text-left text-left">Oturum</span><span class="text-[8px] font-bold text-slate-400 uppercase text-left text-left text-left text-left text-left text-left text-left">MATOTA DİJİTAL</span></div>
-                <button onclick="toggleFullScreen()" class="bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl hover:bg-brand-light hover:text-white transition-all ml-1 shadow-sm flex items-center justify-center text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left">
+                <div class="text-left"><span id="active-title" class="font-black text-[10px] uppercase tracking-widest text-brand-light block mb-0.5">Oturum</span><span class="text-[8px] font-bold text-slate-400 uppercase">MATOTA DİJİTAL</span></div>
+                <button onclick="toggleFullScreen()" class="bg-slate-100 dark:bg-slate-800 p-2.5 rounded-xl hover:bg-brand-light hover:text-white transition-all ml-1 shadow-sm flex items-center justify-center">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" stroke-width="2.5" stroke-linecap="round"/></svg>
                 </button>
             </div>
-            <div id="exam-timer-box" class="glass bg-white dark:bg-slate-900 px-6 py-2 rounded-xl font-mono font-black text-xl border border-brand-light/30 flex items-center gap-3 text-brand-light shadow-inner text-left text-left text-left text-left text-left text-left text-left">
+            <div id="exam-timer-box" class="glass bg-white dark:bg-slate-900 px-6 py-2 rounded-xl font-mono font-black text-xl border border-brand-light/30 flex items-center gap-3 text-brand-light shadow-inner">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="2.5" stroke-linecap="round"/></svg>
-                <span id="exam-timer" class="text-left text-left text-left">00:00</span>
+                <span id="exam-timer">00:00</span>
             </div>
         </header>
         
-        <div class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-8 text-left text-left text-left text-left">
-            <div class="lg:col-span-8 space-y-6 text-left text-left text-left text-left text-left">
-                <!-- Soru Alanı -->
-                <div id="q-area" class="relative glass bg-white/40 dark:bg-slate-900/40 rounded-[35px] shadow-2xl border-white/50 dark:border-slate-800/50 min-h-[500px] overflow-hidden flex flex-col text-left text-left text-left">
-                    <div id="q-container" class="p-10 relative z-0 flex-1 text-left overflow-y-auto custom-scrollbar text-left text-left text-left text-left text-left text-left text-left"></div>
-                    <div id="q-inline-choices" class="p-6 glass bg-white/60 dark:bg-slate-800/60 border-t border-white/20 flex justify-center gap-4 z-[20] text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left"></div>
-                    <div id="canvas-container" class="canvas-container text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left"><canvas id="whiteboard-canvas" class="text-left text-left"></canvas></div>
+        <div class="max-w-7xl mx-auto px-4 py-8 grid lg:grid-cols-12 gap-8 text-left">
+            <div class="lg:col-span-8 space-y-6 text-left">
+                <div id="q-area" class="relative glass bg-white/40 dark:bg-slate-900/40 rounded-[35px] shadow-2xl border-white/50 dark:border-slate-800/50 min-h-[500px] overflow-hidden flex flex-col">
+                    <div id="q-container" class="p-10 relative z-0 flex-1 text-left overflow-y-auto custom-scrollbar"></div>
+                    <div id="q-inline-choices" class="p-6 glass bg-white/60 dark:bg-slate-800/60 border-t border-white/20 flex justify-center gap-4 z-[20]"></div>
+                    <div id="canvas-container" class="canvas-container"><canvas id="whiteboard-canvas"></canvas></div>
                 </div>
 
-                <!-- Kontrol Barı -->
-                <div class="glass p-4 rounded-[28px] shadow-xl flex flex-wrap items-center justify-between gap-4 border-white/30 text-left text-left text-left text-left text-left text-left text-left">
-                    <div class="flex items-center gap-3 text-left text-left text-left text-left">
-                        <div class="flex gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl shadow-inner text-left text-left text-left text-left text-left text-left text-left">
-                            <button onclick="setPenColor('#000000')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm text-left text-left" style="background: #000000;"></button>
-                            <button onclick="setPenColor('#ffffff')" class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-sm text-left text-left" style="background: #ffffff;"></button>
-                            <button onclick="setPenColor('#6366f1')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm text-left text-left" style="background: #6366f1;"></button>
-                            <button onclick="setPenColor('#ef4444')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm text-left text-left" style="background: #ef4444;"></button>
-                            <button onclick="setPenColor('#22c55e')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm text-left text-left" style="background: #22c55e;"></button>
+                <div class="glass p-4 rounded-[28px] shadow-xl flex flex-wrap items-center justify-between gap-4 border-white/30 text-left">
+                    <div class="flex items-center gap-3">
+                        <div class="flex gap-1.5 p-1.5 bg-slate-100 dark:bg-slate-800 rounded-xl shadow-inner">
+                            <button onclick="setPenColor('#000000')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm" style="background: #000000;"></button>
+                            <button onclick="setPenColor('#ffffff')" class="w-7 h-7 rounded-full border-2 border-slate-300 dark:border-slate-700 shadow-sm" style="background: #ffffff;"></button>
+                            <button onclick="setPenColor('#6366f1')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm" style="background: #6366f1;"></button>
+                            <button onclick="setPenColor('#ef4444')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm" style="background: #ef4444;"></button>
+                            <button onclick="setPenColor('#22c55e')" class="w-7 h-7 rounded-full border-2 border-white dark:border-slate-700 shadow-sm" style="background: #22c55e;"></button>
                         </div>
                         
-                        <div class="flex items-center gap-1.5 text-left text-left text-left text-left">
-                            <button onclick="setTool('pen')" id="tool-pen" class="btn-hover bg-brand-light text-white p-2.5 rounded-xl shadow-md transition-all tool-btn flex items-center justify-center text-left text-left text-left text-left text-center text-left text-left text-left text-left">
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="setTool('pen')" id="tool-pen" class="btn-hover bg-brand-light text-white p-2.5 rounded-xl shadow-md transition-all tool-btn flex items-center justify-center">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-width="2.5" stroke-linecap="round"/></svg>
                             </button>
-                            <button onclick="setTool('eraser')" id="tool-eraser" class="btn-hover bg-slate-100 dark:bg-slate-800 text-slate-500 p-2.5 rounded-xl border border-transparent hover:border-brand-light/20 tool-btn flex items-center justify-center text-left text-left text-center text-left text-left text-center text-left text-left text-center text-left text-left text-left">
+                            <button onclick="setTool('eraser')" id="tool-eraser" class="btn-hover bg-slate-100 dark:bg-slate-800 text-slate-500 p-2.5 rounded-xl border border-transparent hover:border-brand-light/20 tool-btn flex items-center justify-center">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 15.5l7.5-7.5m1.414 1.414L12.414 16.914l-5 2.5 2.5-5L17.414 6.914l1.414 1.414z" stroke-width="2.5" stroke-linecap="round"/></svg>
                             </button>
                         </div>
                         
-                        <select onchange="setBrushSize(this.value)" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-black p-2.5 rounded-xl border-none outline-none shadow-inner text-left text-left text-center text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left">
+                        <select onchange="setBrushSize(this.value)" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-black p-2.5 rounded-xl border-none outline-none shadow-inner">
                             <option value="2">İnce</option><option value="6">Orta</option><option value="18">Kalın</option>
                         </select>
 
-                        <button onclick="clearCanvas(true)" class="btn-hover bg-red-50 dark:bg-red-950/30 text-red-500 p-2.5 rounded-xl shadow-sm hover:bg-red-500 hover:text-white transition-all flex items-center justify-center text-left text-left text-center text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2.5" stroke-linecap="round"/></svg></button>
-                        <button onclick="toggleWhiteboard()" id="btn-toggle-wb" class="btn-hover text-[10px] font-black uppercase tracking-widest px-6 py-3 bg-slate-900 dark:bg-brand-light text-white rounded-xl shadow-lg text-left text-left text-center text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-left">Kalemi Aç</button>
+                        <button onclick="clearCanvas(true)" class="btn-hover bg-red-50 dark:bg-red-950/30 text-red-500 p-2.5 rounded-xl shadow-sm hover:bg-red-500 hover:text-white transition-all flex items-center justify-center"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2.5" stroke-linecap="round"/></svg></button>
+                        <button onclick="toggleWhiteboard()" id="btn-toggle-wb" class="btn-hover text-[10px] font-black uppercase tracking-widest px-6 py-3 bg-slate-900 dark:bg-brand-light text-white rounded-xl shadow-lg">Kalemi Aç</button>
                     </div>
-                    <div class="flex gap-2 text-left text-left text-center text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-left text-left">
-                        <button id="q-btn-prev" onclick="navQ(-1)" class="btn-hover bg-slate-100 dark:bg-slate-800 text-slate-400 px-6 py-2.5 rounded-xl font-black uppercase text-[10px] text-left text-left text-left text-left">Geri</button>
-                        <button id="q-btn-next" onclick="navQ(1)" class="btn-hover bg-brand-light text-white px-10 py-2.5 rounded-xl font-black uppercase shadow-lg text-[10px] hover:bg-brand-dark transition-all text-left text-left text-center text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-left text-left">İleri</button>
+                    <div class="flex gap-2 text-center">
+                        <button id="q-btn-prev" onclick="navQ(-1)" class="btn-hover bg-slate-100 dark:bg-slate-800 text-slate-400 px-6 py-2.5 rounded-xl font-black uppercase text-[10px]">Geri</button>
+                        <button id="q-btn-next" onclick="navQ(1)" class="btn-hover bg-brand-light text-white px-10 py-2.5 rounded-xl font-black uppercase shadow-lg text-[10px] hover:bg-brand-dark transition-all">İleri</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Optik -->
-            <div class="lg:col-span-4 text-left text-left text-left">
-                <div class="glass p-6 rounded-[35px] shadow-xl border-white/40 sticky top-24 h-fit max-h-[82vh] flex flex-col text-left text-left text-left text-left">
-                    <h3 class="font-black mb-4 text-indigo-600 uppercase tracking-widest text-xs border-b dark:border-slate-800 pb-2 text-left text-left text-left text-left">Soru Listesi</h3>
-                    <div id="opt-form" class="space-y-1.5 overflow-y-auto custom-scrollbar flex-1 pr-3 text-left text-left text-left text-left text-left"></div>
-                    <button id="finish-btn" onclick="finishExamPrompt()" class="btn-hover mt-6 w-full bg-slate-900 dark:bg-brand-light text-white py-4 rounded-2xl font-black shadow-xl uppercase tracking-widest text-[10px] hover:bg-brand-dark transition-all text-left text-left text-center text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-center text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Bitir ve Gönder</button>
+            <div class="lg:col-span-4">
+                <div class="glass p-6 rounded-[35px] shadow-xl border-white/40 sticky top-24 h-fit max-h-[82vh] flex flex-col">
+                    <h3 class="font-black mb-4 text-indigo-600 uppercase tracking-widest text-xs border-b dark:border-slate-800 pb-2 text-left">Soru Listesi</h3>
+                    <div id="opt-form" class="space-y-1.5 overflow-y-auto custom-scrollbar flex-1 pr-3"></div>
+                    <button id="finish-btn" onclick="finishExamPrompt()" class="mt-6 w-full bg-slate-900 dark:bg-brand-light text-white py-4 rounded-2xl font-black shadow-xl uppercase tracking-widest text-[10px] hover:bg-brand-dark transition-all">Bitir ve Gönder</button>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- BEKLEME PANELİ -->
-    <section id="wait-section" class="view-section hidden max-w-2xl mx-auto mt-16 px-6 text-center text-center text-center text-center">
-        <div class="glass p-12 rounded-[55px] shadow-2xl relative overflow-hidden border-white/50 text-center text-center text-center text-center text-center">
-            <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand-light/10 rounded-full blur-3xl animate-pulse text-center text-center text-center text-center text-center"></div>
-            <div class="relative z-10 text-center text-center text-center text-center text-center text-center">
-                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg shadow-indigo-100 text-center text-center text-center text-center text-center text-center"></div>
-                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-6 uppercase tracking-tight text-center text-center text-center text-center text-center text-center text-center">Yanıtlar İletildi</h2>
-                <p class="text-xl text-indigo-500 font-bold italic mb-10 tracking-tight text-center text-center text-center text-center text-center text-center text-center">"Yanıtlarınız başarıyla öğretmeninize ulaştı. Onay bekleniyor..."</p>
+    <section id="wait-section" class="view-section hidden max-w-2xl mx-auto mt-16 px-6 text-center">
+        <div class="glass p-12 rounded-[55px] shadow-2xl relative overflow-hidden border-white/50 text-center">
+            <div class="absolute -top-24 -right-24 w-64 h-64 bg-brand-light/10 rounded-full blur-3xl animate-pulse text-center"></div>
+            <div class="relative z-10 text-center">
+                <div class="w-32 h-32 border-[10px] border-indigo-100 border-t-indigo-600 rounded-full animate-spin mx-auto mb-10 shadow-lg shadow-indigo-100 text-center"></div>
+                <h2 class="text-4xl font-black text-slate-800 dark:text-white mb-6 uppercase tracking-tight text-center">Yanıtlar İletildi</h2>
+                <p class="text-xl text-indigo-500 font-bold italic mb-10 tracking-tight text-center">"Yanıtlarınız başarıyla öğretmeninize ulaştı. Onay bekleniyor..."</p>
                 
-                <div class="bg-red-500/10 border-2 border-red-500/20 p-8 rounded-[40px] flex items-center gap-6 text-left animate-pulse text-left text-left text-left text-left text-left">
-                    <div class="bg-red-500 text-white p-4 rounded-3xl shadow-xl text-left text-left text-left text-left text-left text-left">
+                <div class="bg-red-500/10 border-2 border-red-500/20 p-8 rounded-[40px] flex items-center gap-6 text-left animate-pulse">
+                    <div class="bg-red-500 text-white p-4 rounded-3xl shadow-xl">
                         <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                     </div>
-                    <div class="text-left text-left text-left text-left text-left text-left text-left text-left">
-                        <h4 class="text-red-600 font-black uppercase text-base tracking-widest text-left text-left text-left text-left text-left text-left text-left text-left text-left">KRİTİK UYARI</h4>
-                        <p class="text-slate-600 dark:text-slate-300 text-sm font-extrabold leading-relaxed text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">SAYFAYI YENİLEMEYİN VE SEKMAYI KAPATMAYIN. <br>Sonuç açıklandığında bu ekran otomatik olarak değişecektir.</p>
+                    <div>
+                        <h4 class="text-red-600 font-black uppercase text-base tracking-widest">KRİTİK UYARI</h4>
+                        <p class="text-slate-600 dark:text-slate-300 text-sm font-extrabold leading-relaxed">SAYFAYI YENİLEMEYİN VE SEKMEYİ KAPATMAYIN. <br>Sonuç yayınlandığında bu ekran otomatik olarak değişecektir.</p>
                     </div>
                 </div>
             </div>
@@ -345,12 +345,12 @@
     </section>
 
     <!-- SONUÇ -->
-    <section id="result-section" class="view-section hidden max-w-2xl mx-auto mt-12 px-6 pb-20 text-center text-left text-left text-left text-left text-left text-left">
-        <div class="glass p-10 rounded-[40px] shadow-2xl relative overflow-hidden border-white/30 text-left text-left text-left text-left text-left text-left text-left text-left text-left">
-            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-light to-green-500 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"></div>
-            <h2 class="text-3xl font-black text-center mb-10 uppercase text-brand-light tracking-tighter text-left text-left text-center text-left text-left text-center text-left text-left text-center">Sınav Analiz Raporu</h2>
-            <div id="res-content" class="space-y-3 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"></div>
-            <button onclick="location.reload()" class="btn-hover w-full mt-10 bg-slate-900 dark:bg-brand-light text-white py-5 rounded-2xl font-black shadow-xl uppercase tracking-widest text-sm transition-all hover:scale-[1.02] text-center text-left text-left text-center text-center text-left text-left text-center text-center text-center text-center">ANA SAYFA</button>
+    <section id="result-section" class="view-section hidden max-w-2xl mx-auto mt-12 px-6 pb-20 text-center text-left">
+        <div class="glass p-10 rounded-[40px] shadow-2xl relative overflow-hidden border-white/30 text-left">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-light to-green-500"></div>
+            <h2 class="text-3xl font-black text-center mb-10 uppercase text-brand-light tracking-tighter">Sınav Analiz Raporu</h2>
+            <div id="res-content" class="space-y-3"></div>
+            <button onclick="location.reload()" class="btn-hover w-full mt-10 bg-slate-900 dark:bg-brand-light text-white py-5 rounded-2xl font-black shadow-xl uppercase tracking-widest text-sm transition-all hover:scale-[1.02] text-center">KAPAT VE DÖN</button>
         </div>
     </section>
 
@@ -366,7 +366,10 @@
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('matota_theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-            if(ctx) ctx.strokeStyle = (document.documentElement.classList.contains('dark') && penColor === '#000000') ? '#ffffff' : penColor;
+            if(ctx) {
+                ctx.strokeStyle = penColor;
+                ctx.globalCompositeOperation = 'source-over';
+            }
         }
         function loadTheme() { if (localStorage.getItem('matota_theme') === 'dark' || (!localStorage.getItem('matota_theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark'); }
 
@@ -376,13 +379,13 @@
             canvas = document.getElementById('whiteboard-canvas'); if(!canvas) return; ctx = canvas.getContext('2d');
             const container = document.getElementById('q-area'); canvas.width = container.offsetWidth; canvas.height = container.offsetHeight;
             ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.lineWidth = brushSize; 
-            ctx.strokeStyle = (document.documentElement.classList.contains('dark') && penColor === '#000000') ? '#ffffff' : penColor;
+            ctx.strokeStyle = penColor;
             const getPos = (e) => { const rect = canvas.getBoundingClientRect(); return { x: (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left, y: (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top }; };
             const startDraw = (e) => { if(!wbActive) return; drawing = true; const pos = getPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); };
             const draw = (e) => { 
                 if(!drawing || !wbActive) return; e.preventDefault(); const pos = getPos(e); 
                 ctx.globalCompositeOperation = tool === 'eraser' ? 'destination-out' : 'source-over'; 
-                ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : (document.documentElement.classList.contains('dark') && penColor === '#000000' ? '#ffffff' : penColor); 
+                ctx.strokeStyle = tool === 'eraser' ? 'rgba(0,0,0,1)' : penColor; 
                 ctx.lineWidth = tool === 'eraser' ? 40 : brushSize; 
                 ctx.lineTo(pos.x, pos.y); ctx.stroke(); 
             };
@@ -391,13 +394,13 @@
             canvas.addEventListener('touchstart', startDraw); canvas.addEventListener('touchmove', draw); canvas.addEventListener('touchend', stopDraw);
         }
 
-        window.toggleWhiteboard = () => { wbActive = !wbActive; const btn = document.getElementById('btn-toggle-wb'); document.getElementById('canvas-container').classList.toggle('active', wbActive); btn.innerText = wbActive ? "Kalemi Kapat" : "Kalemi Aç"; btn.classList.toggle('bg-orange-600', wbActive); btn.classList.toggle('bg-slate-900', !wbActive); btn.classList.toggle('dark:bg-slate-700', !wbActive); };
+        window.toggleWhiteboard = () => { wbActive = !wbActive; const btn = document.getElementById('btn-toggle-wb'); document.getElementById('canvas-container').classList.toggle('active', wbActive); btn.innerText = wbActive ? "Kalemi Kapat" : "Kalemi Aç"; btn.classList.toggle('bg-orange-600', wbActive); btn.classList.toggle('bg-slate-900', !wbActive); };
         window.setTool = (t) => { tool = t; document.querySelectorAll('.tool-btn').forEach(b => { b.classList.remove('bg-brand-light', 'text-white'); b.classList.add('bg-slate-100', 'dark:bg-slate-800', 'text-slate-500'); }); const active = document.getElementById(`tool-${t}`); active.classList.replace('bg-slate-100', 'bg-brand-light'); active.classList.replace('text-slate-500', 'text-white'); };
         window.setPenColor = (c) => { 
             penColor = c; tool = 'pen'; setTool('pen'); 
             if(ctx) {
+                ctx.strokeStyle = c;
                 ctx.globalCompositeOperation = 'source-over';
-                ctx.strokeStyle = (document.documentElement.classList.contains('dark') && c === '#000000') ? '#ffffff' : c;
             }
         };
         window.setBrushSize = (s) => { brushSize = parseInt(s); if(ctx) ctx.lineWidth = brushSize; };
@@ -412,7 +415,7 @@
                 const session = JSON.parse(localStorage.getItem('matota_auth') || '{}');
                 const eid = new URLSearchParams(window.location.search).get('exam');
                 if (eid) { document.getElementById('main-nav').style.display = 'none'; navigate('student-login'); document.getElementById('std-exam-id').value = decodeURIComponent(eid).trim().toUpperCase(); }
-                else if (session.isTeacher) { document.getElementById('teacher-nav-btn').innerText = "Kontrol Paneli"; navigate('teacher-dashboard'); }
+                else if (session.isTeacher) { document.getElementById('teacher-nav-btn').innerText = "Yönetim Paneli"; navigate('teacher-dashboard'); }
                 else navigate('portal');
             } else setTimeout(init, 100);
         }
@@ -438,13 +441,13 @@
         async function fetchAllExams() { const { data, error } = await _sb.from('exams').select('*').order('created_at', { ascending: false }); if (!error) { exams = data || []; renderExamsList(); } }
         function renderExamsList() {
             document.getElementById('exams-container').innerHTML = exams.map(ex => `
-                <div class="glass p-5 rounded-[22px] flex flex-col sm:flex-row justify-between items-center transition-all hover:shadow-lg border-white/30 gap-4 text-left">
-                    <div class="text-left flex-1"><h4 class="font-black text-lg uppercase text-slate-800 dark:text-white">${ex.title}</h4>
-                    <div class="flex gap-2 mt-1.5"><span class="text-[8px] font-black uppercase text-brand-light bg-brand-light/10 px-2 py-0.5 rounded-md text-center">#${ex.code || ex.id.substring(0,8)}</span>
-                    <span class="text-[8px] font-black uppercase text-slate-400 text-center">${ex.questions?.length || 0} SORU</span></div></div>
-                    <div class="flex gap-2 w-full sm:w-auto text-left">
-                        <button onclick="solveAsTeacher('${ex.id}')" class="flex-1 sm:flex-none bg-orange-100 dark:bg-orange-900/30 text-orange-600 px-5 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-orange-600 hover:text-white transition-all text-center">Çöz</button>
-                        <button onclick="openExamManager('${ex.id}')" class="flex-1 sm:flex-none bg-brand-light text-white px-7 py-2 rounded-xl font-black text-[9px] uppercase shadow-lg hover:bg-brand-dark transition-all text-center">Yönet</button>
+                <div class="glass p-5 rounded-[22px] flex flex-col sm:flex-row justify-between items-center transition-all hover:shadow-lg border-white/30 gap-4 text-left text-left">
+                    <div class="text-left flex-1 text-left text-left"><h4 class="font-black text-lg uppercase text-slate-800 dark:text-white text-left text-left">${ex.title}</h4>
+                    <div class="flex gap-2 mt-1.5 text-left text-left"><span class="text-[8px] font-black uppercase text-brand-light bg-brand-light/10 px-2 py-0.5 rounded-md text-center text-left text-left">#${ex.code || ex.id.substring(0,8)}</span>
+                    <span class="text-[8px] font-black uppercase text-slate-400 text-center text-left text-left">${ex.questions?.length || 0} SORU</span></div></div>
+                    <div class="flex gap-2 w-full sm:w-auto text-left text-left text-left">
+                        <button onclick="solveAsTeacher('${ex.id}')" class="flex-1 sm:flex-none bg-orange-100 dark:bg-orange-900/30 text-orange-600 px-5 py-2 rounded-xl font-black text-[9px] uppercase hover:bg-orange-600 hover:text-white transition-all text-center text-left text-left">Çöz</button>
+                        <button onclick="openExamManager('${ex.id}')" class="flex-1 sm:flex-none bg-brand-light text-white px-7 py-2 rounded-xl font-black text-[9px] uppercase shadow-lg hover:bg-brand-dark transition-all text-center text-left text-left text-left">Yönet</button>
                     </div>
                 </div>`).join('');
         }
@@ -455,7 +458,7 @@
 
         // --- QUESTION MGMT ---
         window.handleImagePreview = (e) => { const f = e.target.files[0]; if(!f) return; const r = new FileReader(); r.onload = (ev) => { tempImg = ev.target.result; updateLivePreview(); }; r.readAsDataURL(f); };
-        window.updateLivePreview = () => { const t = document.getElementById('q-input').value, p = document.getElementById('live-preview'); if(t || tempImg) { p.classList.remove('hidden'); document.getElementById('preview-text').innerText = t; document.getElementById('preview-img-container').innerHTML = tempImg ? `<img src="${tempImg}" class="max-h-32 rounded-lg mx-auto border shadow-sm text-left">` : ''; } else p.classList.add('hidden'); };
+        window.updateLivePreview = () => { const t = document.getElementById('q-input').value, p = document.getElementById('live-preview'); if(t || tempImg) { p.classList.remove('hidden'); document.getElementById('preview-text').innerText = t; document.getElementById('preview-img-container').innerHTML = tempImg ? `<img src="${tempImg}" class="max-h-32 rounded-lg mx-auto border shadow-sm">` : ''; } else p.classList.add('hidden'); };
         window.saveQuestion = async () => {
             const t = document.getElementById('q-input').value, a = document.getElementById('q-ans').value; if(!t && !tempImg) return;
             setProgress(30); let updated = [...(curExam.questions || [])];
@@ -465,35 +468,34 @@
         };
         window.editQuestion = (idx) => { isEditMode = true; editingQIdx = idx; const q = curExam.questions[idx]; document.getElementById('q-input').value = q.text || ""; document.getElementById('q-ans').value = q.correct; tempImg = q.image; updateLivePreview(); document.getElementById('q-editor-title').innerText = "Düzenleme"; document.getElementById('save-q-btn').innerText = "Güncelle"; document.getElementById('cancel-edit-btn').classList.remove('hidden'); };
         window.resetQuestionEditor = () => { isEditMode = false; tempImg = null; document.getElementById('q-input').value = ''; document.getElementById('q-editor-title').innerText = "Soru Ekle"; document.getElementById('save-q-btn').innerText = "Soru Kaydet"; document.getElementById('cancel-edit-btn').classList.add('hidden'); updateLivePreview(); };
-        function renderQuestionsInManager() { document.getElementById('q-list').innerHTML = (curExam.questions || []).map((q, i) => `<div class="glass p-4 rounded-2xl border flex justify-between items-center text-left text-left"><div class="overflow-hidden flex-1 text-left"><span class="text-[8px] font-black text-brand-light block uppercase text-left">#${i+1}</span><p class="text-[10px] font-bold truncate">${q.text || "Görsel Soru"}</p></div><div class="flex gap-2 text-left"><button onclick="editQuestion(${i})" class="text-brand-light p-2 text-left"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2.5"/></svg></button><button onclick="deleteQuestion(${i})" class="text-red-500 p-2 text-left"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7" stroke-width="2.5"/></svg></button></div></div>`).join(''); }
+        function renderQuestionsInManager() { document.getElementById('q-list').innerHTML = (curExam.questions || []).map((q, i) => `<div class="glass p-4 rounded-2xl border flex justify-between items-center text-left"><div class="overflow-hidden flex-1 text-left text-left"><span class="text-[8px] font-black text-brand-light block uppercase text-left text-left">#${i+1}</span><p class="text-[10px] font-bold truncate text-left text-left text-left">${q.text || "Görsel Soru"}</p></div><div class="flex gap-2 text-left text-left text-left"><button onclick="editQuestion(${i})" class="text-brand-light p-2 text-left text-left text-left"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-width="2.5"/></svg></button><button onclick="deleteQuestion(${i})" class="text-red-500 p-2 text-left text-left text-left text-left text-left"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7" stroke-width="2.5"/></svg></button></div></div>`).join(''); }
         window.deleteQuestion = async (idx) => { if(confirm("Silinsin mi?")) { curExam.questions.splice(idx, 1); await _sb.from('exams').update({ questions: curExam.questions }).eq('id', curExam.id); renderQuestionsInManager(); } };
 
         async function fetchStudentsAndSubs() {
             const { data: stds } = await _sb.from('students').select('*').eq('exam_id', curExam.id), { data: subs } = await _sb.from('submissions').select('*').eq('exam_id', curExam.id);
-            document.getElementById('s-list').innerHTML = (stds || []).map(s => `<div class="glass p-3 rounded-xl border flex justify-between items-center text-left text-left"><div class="flex flex-col text-left text-left"><span class="font-black text-[11px] uppercase text-left">${s.name}</span><span class="font-mono text-[8px] text-brand-light font-bold text-left text-left">PW: ${s.password}</span></div><button onclick="deleteStudent('${s.id}')" class="text-red-400 p-1.5 text-left"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" stroke-width="2.5"/></svg></button></div>`).join('');
-            document.getElementById('sub-list').innerHTML = (subs || []).map(sub => `<div class="glass dark:bg-slate-800/60 p-4 rounded-2xl flex justify-between items-center border-white/5 text-left"><div class="cursor-pointer flex-1 text-left text-left" onclick="viewDetails('${sub.id}')"><p class="font-black text-sm uppercase text-left">${sub.student_name}</p><p class="text-[8px] opacity-50 font-bold uppercase text-indigo-300 text-left">İncele</p></div><div class="flex gap-2 text-left"><button onclick="giveExtraTime('${sub.id}')" class="bg-brand-orange text-white p-2 rounded-xl text-left"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3"/></svg></button>${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-white text-indigo-900 px-5 rounded-xl font-black text-[8px] uppercase text-center text-left">Yayınla</button>` : `<svg class="w-6 h-6 text-green-400 text-left" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="3"/></svg>`}</div></div>`).join('');
+            document.getElementById('s-list').innerHTML = (stds || []).map(s => `<div class="glass p-3 rounded-xl border flex justify-between items-center text-left text-left"><div class="flex flex-col text-left text-left text-left text-left"><span class="font-black text-[11px] uppercase text-left text-left text-left">${s.name}</span><span class="font-mono text-[8px] text-brand-light font-bold text-left text-left text-left text-left">PW: ${s.password}</span></div><button onclick="deleteStudent('${s.id}')" class="text-red-400 p-1.5 text-left text-left text-left text-left"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7a4 4 0 11-8 0 4 4 0 018 0zM9 14a6 6 0 00-6 6v1h12v-1a6 6 0 00-6-6zM21 12h-6" stroke-width="2.5"/></svg></button></div>`).join('');
+            document.getElementById('sub-list').innerHTML = (subs || []).map(sub => `<div class="glass dark:bg-slate-800/60 p-4 rounded-2xl flex justify-between items-center border-white/5 text-left text-left text-left"><div class="cursor-pointer flex-1 text-left text-left text-left text-left" onclick="viewDetails('${sub.id}')"><p class="font-black text-sm uppercase text-left text-left text-left">${sub.student_name}</p><p class="text-[8px] opacity-50 font-bold uppercase text-indigo-300 text-left text-left text-left text-left">İncele</p></div><div class="flex gap-2 text-left text-left text-left text-left text-left"><button onclick="giveExtraTime('${sub.id}')" class="bg-brand-orange text-white p-2 rounded-xl text-left text-left text-left text-left text-left"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-width="3"/></svg></button>${sub.status === 'pending' ? `<button onclick="publishResult('${sub.id}')" class="bg-white text-indigo-900 px-5 rounded-xl font-black text-[8px] uppercase text-center text-left text-left text-left">Yayınla</button>` : `<svg class="w-6 h-6 text-green-400 text-left text-left text-left text-left text-left" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-width="3"/></svg>`}</div></div>`).join('');
         }
         window.deleteStudent = async (id) => { if(confirm("Silinsin mi?")) { await _sb.from('students').delete().eq('id', id); fetchStudentsAndSubs(); } };
         window.giveExtraTime = async (id) => { const m = prompt("Kaç dk?", "10"); if(!m) return; await _sb.from('submissions').update({ status: 'active', extra_time_until: new Date(Date.now()+m*60000).toISOString() }).eq('id', id); fetchStudentsAndSubs(); };
         
-        // --- POPUP: SORU DETAYI ---
         window.viewQuestionInfo = (idx) => {
             const q = curExam.questions[idx];
             const stdAns = stdAnswers[idx] || '-';
             const isCorrect = stdAns === q.correct;
             document.getElementById('modal-student-name').innerText = `SORU #${idx + 1} DETAYI`;
             document.getElementById('modal-answers-content').innerHTML = `
-                <div class="space-y-6 text-left text-left">
-                    ${q.image ? `<div class="bg-white p-4 rounded-3xl border shadow-md flex justify-center text-left"><img src="${q.image}" class="max-h-[350px] w-auto object-contain text-left"></div>` : ''}
-                    <div class="text-xl font-bold dark:text-white whitespace-pre-wrap text-left">${q.text || ""}</div>
-                    <div class="flex gap-4 p-5 glass rounded-[30px] border-2 ${isCorrect ? 'border-green-500/30 bg-green-50/10' : 'border-red-500/30 bg-red-50/10'} text-left">
-                        <div class="flex-1 text-left text-left">
-                            <p class="text-[10px] font-black uppercase text-slate-400 text-left">Senin Cevabın</p>
-                            <p class="text-2xl font-black ${isCorrect ? 'text-green-600' : 'text-red-600'} text-left">${stdAns}</p>
+                <div class="space-y-6 text-left text-left text-left">
+                    ${q.image ? `<div class="bg-white p-4 rounded-3xl border shadow-md flex justify-center text-left text-left text-left text-left"><img src="${q.image}" class="max-h-[350px] w-auto object-contain text-left text-left text-left text-left"></div>` : ''}
+                    <div class="text-xl font-bold dark:text-white whitespace-pre-wrap text-left text-left text-left text-left">${q.text || ""}</div>
+                    <div class="flex gap-4 p-5 glass rounded-[30px] border-2 ${isCorrect ? 'border-green-500/30 bg-green-50/10' : 'border-red-500/30 bg-red-50/10'} text-left text-left text-left text-left">
+                        <div class="flex-1 text-left text-left text-left text-left text-left">
+                            <p class="text-[10px] font-black uppercase text-slate-400 text-left text-left text-left">Senin Cevabın</p>
+                            <p class="text-2xl font-black ${isCorrect ? 'text-green-600' : 'text-red-600'} text-left text-left text-left">${stdAns}</p>
                         </div>
-                        <div class="flex-1 text-left text-left text-left">
-                            <p class="text-[10px] font-black uppercase text-slate-400 text-left">Doğru Cevap</p>
-                            <p class="text-2xl font-black text-indigo-600 text-left">${q.correct}</p>
+                        <div class="flex-1 text-left text-left text-left text-left text-left text-left text-left">
+                            <p class="text-[10px] font-black uppercase text-slate-400 text-left text-left text-left text-left">Doğru Cevap</p>
+                            <p class="text-2xl font-black text-indigo-600 text-left text-left text-left text-left text-left text-left">${q.correct}</p>
                         </div>
                     </div>
                 </div>
@@ -506,7 +508,7 @@
             document.getElementById('modal-student-name').innerText = sub.student_name;
             document.getElementById('modal-answers-content').innerHTML = curExam.questions.map((q, i) => {
                 const sAns = sub.answers[i] || '-', isC = sAns === q.correct;
-                return `<div class="glass p-4 rounded-[25px] border-2 ${isC ? 'border-green-500/20' : 'border-red-500/20'} text-left text-left"><p class="text-xs font-black text-slate-600 dark:text-slate-200 mb-3 uppercase font-mono tracking-tight text-left">${q.text || "Görsel Soru"}</p><div class="flex gap-6 font-black text-[10px] uppercase text-left"><span>Giriş: ${sAns}</span><span class="text-brand-light">Doğru: ${q.correct}</span></div></div>`;
+                return `<div class="glass p-4 rounded-[25px] border-2 ${isC ? 'border-green-500/20' : 'border-red-500/20'} text-left text-left text-left text-left text-left text-left"><p class="text-xs font-black text-slate-600 dark:text-slate-200 mb-3 uppercase font-mono tracking-tight text-left text-left text-left text-left">${q.text || "Görsel Soru"}</p><div class="flex gap-6 font-black text-[10px] uppercase text-left text-left text-left text-left text-left"><span>Giriş: ${sAns}</span><span class="text-brand-light text-left text-left text-left text-left text-left text-left text-left">Doğru: ${q.correct}</span></div></div>`;
             }).join('');
             document.getElementById('details-modal').classList.replace('hidden', 'flex');
         };
@@ -515,20 +517,22 @@
         window.addStudent = async () => { const n = document.getElementById('s-name-input').value, p = Math.random().toString(36).substring(2, 7).toUpperCase(); if(!n) return; await _sb.from('students').insert([{ exam_id: curExam.id, name: n, password: p }]); document.getElementById('s-name-input').value = ''; fetchStudentsAndSubs(); };
         window.publishResult = async (id) => { await _sb.from('submissions').update({ status: 'published' }).eq('id', id); fetchStudentsAndSubs(); };
 
-        // --- LOGIN & ENTRY KİLİDİ ---
+        // --- STUDENT LOGIN & ENTRY ---
         window.studentLogin = async () => {
             const eid = document.getElementById('std-exam-id').value.trim().toUpperCase(), p = document.getElementById('std-pass').value.trim().toUpperCase(); if (!eid || !p) return showToast("Bilgi girin.");
             setCentralLoader(true); setProgress(40);
             
             let { data: ex } = await _sb.from('exams').select('*').eq('code', eid).maybeSingle();
             if(!ex && /^[0-9a-f]{8}/.test(eid)) { let { data: ex2 } = await _sb.from('exams').select('*').eq('id', eid).maybeSingle(); ex = ex2; }
-            if (!ex) { setCentralLoader(false); return showToast("Hatalı kod!"); }
+            if (!ex) { setCentralLoader(false); return showToast("Kod hatalı!"); }
             
             const { data: std } = await _sb.from('students').select('*').eq('exam_id', ex.id).eq('password', p).maybeSingle();
             if (!std) { setCentralLoader(false); return showToast("Hatalı şifre!"); }
 
+            // TEK GİRİŞ KONTROLÜ
             const { data: existingSub } = await _sb.from('submissions').select('*').eq('exam_id', ex.id).eq('student_id', std.id).maybeSingle();
-            if (existingSub && existingSub.status !== 'active') {
+            if (existingSub && existingSub.status !== 'active' && existingSub.status !== 'published') {
+                // Eğer pending veya bitmişse, sadece öğretmen 'active' yaparsa girebilir
                 setCentralLoader(false);
                 return showToast("Bu sınava daha önce katıldınız!");
             }
@@ -560,25 +564,25 @@
 
         function renderExamQuestion() {
             clearCanvas(); const q = curExam.questions[curQIdx]; const c = document.getElementById('q-container'); if (!q) return;
-            let questionHTML = `<div class="space-y-6 text-left animate-in fadeIn duration-500 text-left text-left"><h3 class="text-3xl font-black text-brand-light font-mono uppercase tracking-tighter text-left text-left text-left text-left">Soru ${curQIdx + 1}</h3>`;
-            if(q.image) questionHTML += `<div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl border-2 border-indigo-100 dark:border-slate-800 inline-block mx-auto text-left text-left text-left text-left text-left text-left"><img src="${q.image}" class="max-h-[350px] w-full object-contain rounded-xl text-left text-left text-left text-left"></div>`;
-            if(q.text) questionHTML += `<div class="text-xl font-semibold leading-relaxed dark:text-slate-100 whitespace-pre-wrap font-mono uppercase tracking-tight text-left text-left text-left text-left text-left text-left">${q.text}</div>`;
+            let questionHTML = `<div class="space-y-6 text-left animate-in fadeIn duration-500 text-left text-left text-left text-left text-left text-left"><h3 class="text-3xl font-black text-brand-light font-mono uppercase tracking-tighter text-left text-left text-left text-left text-left text-left text-left text-left text-left">Soru ${curQIdx + 1}</h3>`;
+            if(q.image) questionHTML += `<div class="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-xl border-2 border-indigo-100 dark:border-slate-800 inline-block mx-auto text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><img src="${q.image}" class="max-h-[350px] w-full object-contain rounded-xl text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"></div>`;
+            if(q.text) questionHTML += `<div class="text-xl font-semibold leading-relaxed dark:text-slate-100 whitespace-pre-wrap font-mono uppercase tracking-tight text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">${q.text}</div>`;
             questionHTML += `</div>`;
             c.innerHTML = questionHTML;
 
-            document.getElementById('q-inline-choices').innerHTML = ['A','B','C','D','E'].map(o => `<button onclick="setAns(${curQIdx},'${o}')" class="choice-btn w-14 h-14 rounded-xl border-2 font-black text-xl bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-300 transition-all text-center text-center text-center text-center">${o}</button>`).join('');
+            document.getElementById('q-inline-choices').innerHTML = ['A','B','C','D','E'].map(o => `<button onclick="setAns(${curQIdx},'${o}')" class="choice-btn w-14 h-14 rounded-xl border-2 font-black text-xl bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-300 transition-all text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">${o}</button>`).join('');
             if (questionDrawings[curQIdx]) { const img = new Image(); img.onload = () => ctx.drawImage(img, 0, 0); img.src = questionDrawings[curQIdx]; }
             document.getElementById('q-btn-prev').disabled = curQIdx === 0;
             document.getElementById('q-btn-next').innerText = curQIdx === curExam.questions.length - 1 ? (isTeacherMode ? "Bitir" : "Sınavı Bitir") : "İleri";
         }
         function renderOpticalForm() {
-            document.getElementById('opt-form').innerHTML = curExam.questions.map((q, i) => `<div onclick="jumpToQ(${i})" class="optik-item flex items-center gap-3 py-2 px-4 border-2 rounded-2xl transition-all cursor-pointer ${curQIdx === i ? 'active' : 'border-transparent'} ${stdAnswers[i] ? 'filled' : ''} text-left text-left text-left text-left"><span class="w-8 flex items-center justify-center font-black text-[10px] text-slate-400 dark:text-slate-600 uppercase text-left text-left text-left text-left">#${i+1}</span><div class="flex gap-1.5 text-center text-center text-center text-center text-center text-center text-center">${['A','B','C','D','E'].map(o => `<div class="w-6 h-6 rounded-lg border-2 flex items-center justify-center font-black text-[9px] ${stdAnswers[i] === o ? 'bg-brand-light border-brand-light text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-200 dark:text-slate-700'} text-left text-left text-center text-left text-left text-center text-left text-left text-left">${o}</div>`).join('')}</div></div>`).join('');
+            document.getElementById('opt-form').innerHTML = curExam.questions.map((q, i) => `<div onclick="jumpToQ(${i})" class="optik-item flex items-center gap-3 py-2 px-4 border-2 rounded-2xl transition-all cursor-pointer ${curQIdx === i ? 'active' : 'border-transparent'} ${stdAnswers[i] ? 'filled' : ''} text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span class="w-8 flex items-center justify-center font-black text-[10px] text-slate-400 dark:text-slate-600 uppercase text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">#${i+1}</span><div class="flex gap-1.5 text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">${['A','B','C','D','E'].map(o => `<div class="w-6 h-6 rounded-lg border-2 flex items-center justify-center font-black text-[9px] ${stdAnswers[i] === o ? 'bg-brand-light border-brand-light text-white shadow-md' : 'bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-700 text-slate-200 dark:text-slate-700'} text-left text-left text-center text-left text-left text-center text-left text-left text-center text-left text-left text-center text-left text-left text-left text-left text-left text-center text-left text-left text-left">${o}</div>`).join('')}</div></div>`).join('');
         }
 
         window.jumpToQ = (i) => { if (canvas) questionDrawings[curQIdx] = canvas.toDataURL(); curQIdx = i; renderExamQuestion(); renderOpticalForm(); };
         window.setAns = (i, o) => { if(isTeacherMode) return; if(stdAnswers[i] === o) delete stdAnswers[i]; else stdAnswers[i] = o; renderExamQuestion(); renderOpticalForm(); };
         window.navQ = (d) => { if (canvas) questionDrawings[curQIdx] = canvas.toDataURL(); if (d === 1 && curQIdx === curExam.questions.length - 1) { if(isTeacherMode) location.reload(); else finishExamPrompt(); } else { curQIdx += d; renderExamQuestion(); renderOpticalForm(); } };
-        window.finishExamPrompt = () => { if (confirm("Onaylıyor musunuz?")) finishExam(); };
+        window.finishExamPrompt = () => { if (confirm("Cevaplarınız gönderilecektir. Onaylıyor musunuz?")) finishExam(); };
         window.exitExam = () => { if(confirm("Çıkış?")) { document.title = "MATOTA"; location.reload(); } };
 
         async function finishExam() {
@@ -593,7 +597,7 @@
         function showFinalResults(sub) {
             document.title = "Karneniz Hazır | MATOTA"; navigate('result'); let c = 0; curExam.questions.forEach((q, i) => { if (sub.answers[i] === q.correct) c++; });
             const s = Math.round((c / curExam.questions.length) * 100);
-            document.getElementById('res-content').innerHTML = `<div class="text-center mb-8 text-center text-center text-center text-center text-center"><div class="inline-block p-14 glass rounded-full border-8 border-brand-light shadow-2xl mb-4 font-black text-7xl text-brand-light text-center text-center text-center text-center text-center">%${s}</div><p class="text-slate-400 font-black uppercase text-[10px] tracking-widest text-center text-center text-center text-center text-center">BAŞARI PUANI</p></div><div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-left text-left text-left text-left text-left text-left">${curExam.questions.map((q, i) => `<div onclick="viewQuestionInfo(${i})" class="glass p-5 rounded-[30px] border-2 ${sub.answers[i] === q.correct ? 'border-green-500/20' : 'border-red-500/20'} flex justify-between items-center text-left text-xs uppercase font-bold cursor-pointer transition-transform hover:scale-[1.02] text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><div class="text-left text-left text-left text-left text-left text-left text-left text-left">#${i+1}</div><div class="flex gap-5 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span class="opacity-40 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Sen: ${sub.answers[i] || '-'}</span><span class="text-brand-light text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Doğru: ${q.correct}</span></div></div>`).join('')}</div>`;
+            document.getElementById('res-content').innerHTML = `<div class="text-center mb-10 text-center text-center text-center text-center text-center text-center text-center text-center"><div class="inline-block p-14 glass rounded-full border-8 border-brand-light shadow-2xl mb-4 font-black text-7xl text-brand-light text-center text-center text-center text-center text-center text-center text-center text-center text-center">%${s}</div><p class="text-slate-400 font-black uppercase text-[10px] tracking-widest text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center text-center">BAŞARI PUANI</p></div><div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">${curExam.questions.map((q, i) => `<div onclick="viewQuestionInfo(${i})" class="glass p-5 rounded-[30px] border-2 ${sub.answers[i] === q.correct ? 'border-green-500/20' : 'border-red-500/20'} flex justify-between items-center text-left text-xs uppercase font-bold cursor-pointer transition-transform hover:scale-[1.02] text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><div class="text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">#${i+1}</div><div class="flex gap-5 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left"><span class="opacity-40 text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Sen: ${sub.answers[i] || '-'}</span><span class="text-brand-light text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left text-left">Doğru: ${q.correct}</span></div></div>`).join('')}</div>`;
         }
 
         window.showToast = (m) => { const t = document.getElementById('toast'); t.innerText = m; t.classList.remove('hidden'); setTimeout(() => t.classList.add('hidden'), 3500); };
